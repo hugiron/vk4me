@@ -1,6 +1,7 @@
 from flask import session, redirect
 
 def login():
+    session['user_id'] = 1
     return redirect('/')
 
 def logout():
