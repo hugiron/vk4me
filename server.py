@@ -1,9 +1,16 @@
 from flask import Flask
+from flask_mongoengine import MongoEngine
+from flask_debugtoolbar import DebugToolbarExtension
 
+# Flask init
 app = Flask(__name__)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.config.from_pyfile('./myspy.cfg')
 
+# Connection to database init
+database = MongoEngine(app)
+toolbar = DebugToolbarExtension(app)
+
+# Start server
 from route import *
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

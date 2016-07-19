@@ -17,6 +17,7 @@ app.add_url_rule('/messages/cache', view_func=messages_cache, methods=['GET'], s
 app.add_url_rule('/groups/all', view_func=groups_all, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/groups/admin', view_func=groups_admin, methods=['GET'], strict_slashes=False)
 
+app.add_url_rule('/api/prelogin', view_func=prelogin, methods=['POST'], strict_slashes=False)
 app.add_url_rule('/api/login', view_func=login, methods=['POST'], strict_slashes=False)
 app.add_url_rule('/api/logout', view_func=logout, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/api/registry', view_func=registry, methods=['GET', 'POST'], strict_slashes=False)
