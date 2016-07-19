@@ -325,45 +325,29 @@
       
       <ul class="sidebar-menu">
         <li class="header"><b>ВКонтакте</b></li>
-          <li class="treeview">
-          <a href="#">
-            <i class="fa fa-user"></i>
-            <span>Друзья</span>
-              <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="/static/panel/pages/layout/top-nav.html"><i class="fa fa-list"></i>Все</a></li>
-            <li><a href="/static/panel/pages/layout/boxed.html"><i class="fa fa-clock-o"></i>Новые</a></li>
-          </ul>
-        </li>
-        <li class="active treeview">
-          <a href="#">
-            <i class="fa fa-envelope"></i> <span>Сообщения</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-comments"></i>Актуальные</a></li>
-            <li><a href="index2.html"><i class="fa fa-star"></i>Важные</a></li>
-              <li><a href="index2.html"><i class="fa fa-database"></i>Кэш</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-users"></i>
-            <span>Группы</span>
-              <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="/static/panel/pages/layout/top-nav.html"><i class="fa fa-list"></i>Все</a></li>
-            <li><a href="/static/panel/pages/layout/boxed.html"><i class="fa fa-briefcase"></i>Администрирование</a></li>
-          </ul>
-        </li>
+
+        <!-- GENERATE MENU -->
+          {% for item in menu %}
+              <li class="{% if item.link in path %}active{% endif %} treeview">
+                <a href="{{ item.link }}">
+                    <i class="{{ item.icon }}"></i>
+                    <span>{{ item.title }}</span>
+                    {% if item.tabs %}
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    {% endif %}
+                </a>
+                {% if item.tabs %}
+                    <ul class="treeview-menu">
+                        {% for tab in item.tabs %}
+                            <li {% if tab.link in path %}class="active"{% endif %}><a href="{{ tab.link }}"><i class="{{ tab.icon }}"></i>{{ tab.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+              </li>
+          {% endfor %}
+        <!-- END GENERATE -->
 
         <li class="header"><b>Дополнительно</b></li>
         <li><a href="/faq"><i class="fa fa-question-circle"></i> <span>FAQ</span></a></li>
