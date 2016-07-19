@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_mongoengine import MongoEngine
+from flask_mongoengine import MongoEngine, MongoEngineSessionInterface
 from flask_debugtoolbar import DebugToolbarExtension
 
 # Flask init
@@ -9,6 +9,7 @@ app.config.from_pyfile('./myspy.cfg')
 # Connection to database init
 database = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
+app.session_interface = MongoEngineSessionInterface(database)
 
 # Start server
 from route import *
