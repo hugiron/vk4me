@@ -1,0 +1,14 @@
+.dialog {
+    cursor: pointer;
+    margin-top: -10px;
+    padding: 10px 10px 0 10px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.dialog:hover {
+    background: #e2e6ee;
+}
+
+.dialog:active {
+    background: #b6c2d7;
+}
