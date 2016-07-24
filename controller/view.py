@@ -41,19 +41,22 @@ def messages_cache():
 def groups_all():
     if (not 'user_id' in session):
         return render_template('main/index.html')
-    return render_template('panel/groups/list.html', menu=app.config['MENU'], path=request.path)
+    script = "$.ui.getGroups(user);"
+    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
 
 
 def groups_admin():
     if (not 'user_id' in session):
         return render_template('main/index.html')
-    return render_template('panel/groups/list.html', menu=app.config['MENU'], path=request.path)
+    script = "$.ui.getAdmin(user);"
+    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
 
 
 def friends_all():
     if (not 'user_id' in session):
         return render_template('main/index.html')
-    return render_template('panel/friends/all.html', menu=app.config['MENU'], path=request.path)
+    script = "$.ui.getFriends(user);"
+    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
 
 
 def friends_new():

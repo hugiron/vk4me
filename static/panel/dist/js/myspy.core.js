@@ -31,3 +31,15 @@ $.core.getFriends = function(params, callback) {
         }
     );
 }
+
+$.core.getGroups = function(params, callback) {
+    params['fields'] = 'members_count';
+    params['extended'] = 1;
+    $.core.request(
+        'groups.get',
+        params,
+        function(data) {
+            callback(data['items']);
+        }
+    );
+}
