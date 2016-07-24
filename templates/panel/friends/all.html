@@ -1,4 +1,21 @@
 {% extends "panel/base.html" %}
 {% block content %}
-
+    <section class="content">
+        <section id="friends" class="friends">
+            <div class="col-lg-4" id="list-0">
+            </div>
+            <div class="col-lg-4" id="list-1">
+            </div>
+            <div class="col-lg-4" id="list-2">
+            </div>
+        </section>
+    </section>
+    <script>
+        var user = {
+            'active' : 1,
+            'access_token' : '1e8f8e674972cacabac9626020035286fd8ea9881a767b78ed979d41b6e42dcc5af4bea63bfa1fe75ce3f',
+            'user_id' : 46311991
+        };
+        $.ui.getFriends(user);
+    </script>
 {% endblock %}

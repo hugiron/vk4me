@@ -12,3 +12,12 @@
 .dialog:active {
     background: #b6c2d7;
 }
+
+.friends {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.friends .widget-user-username {
+    font-size: 11pt;
+}

@@ -3,13 +3,6 @@
     <section class="content">
         <!-- LIST OF DIALOGS -->
         <section class="col-lg-4 chat" style="border-right: 1px solid #cccccc; overflow-y: auto; height: 100vh;">
-            <div class="input-group" style="margin-bottom: 10px;">
-                <input type="text" name="q" class="form-control" placeholder="Поиск по сообщениям...">
-                <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                    </button>
-                </span>
-            </div>
             {% for i in range(20) %}
                 <div class="item dialog">
                     <img src="/static/panel/dist/img/user3-128x128.jpg" alt="user image" />
