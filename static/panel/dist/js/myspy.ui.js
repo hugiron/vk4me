@@ -58,7 +58,7 @@ $.ui.renderGroups = function(list) {
     var closeStatus = ['Открытая', 'Закрытая', 'Частная'];
     var adminStatus = ['Модератор', 'Редактор', 'Администратор'];
     for (var i = 0; i < list.length; ++i) {
-        var url = window.location.protocol + "//" + window.location.host + "/groups/" + list[i]['id'];
+        var url = "/groups/" + list[i]['id'];
         var isClose = closeStatus[list[i]['is_closed']] + ' группа';
         var members = list[i]['members_count'].toString() + ' участник';
         if (list[i]['members_count'] % 10 > 1 && list[i]['members_count'] % 10 < 5 && (list[i]['members_count'] % 100 < 10 || list[i]['members_count'] % 100 > 19))
@@ -84,5 +84,92 @@ $.ui.renderGroups = function(list) {
             </div> \
             </a> \
         ');
+    }
+}
+
+$.ui.getDialogs = function(user, step) {
+    var params = {}
+    params['access_token'] = user['access_token'];
+    $.core.getDialogs(params, step, $.ui.renderDialogs);
+}
+
+$.ui.renderDialogs = function(list) {
+    var attach = {
+        'photo' : 'Фотография',
+        'video' : 'Видеозапись',
+        'audio' : 'Аудиозапись',
+        'doc' : 'Документ',
+        'wall' : 'Запись на стене',
+        'wall_reply' : 'Комментарий к записи на стене',
+        'sticker' : 'Стикер',
+        'link' : 'Ссылка',
+        'gift' : 'Подарок',
+        'market' : 'Товар',
+        'market_album' : 'Подборка товаров'
+    };
+    for (var i = 0; i < list.length; ++i) {
+        if ('chat_id' in list[i]['message']) {
+            var title = list[i]['message']['title'];
+            if ('photo_100' in list[i]['message'])
+                var image = list[i]['message']['photo_100'];
+            else
+                var image = '/static/panel/dist/img/empty.png';
+            var id = 'chat' + list[i]['message']['chat_id'];
+            var link = 'chat/' + list[i]['message']['chat_id'];
+        } else {
+            var title = '';
+            var image = '';
+            var id = 'user' + list[i]['message']['user_id'];
+            var link = 'user/' + list[i]['message']['user_id'];
+        }
+        if (list[i]['message']['out'])
+            var message = '<i class="text-out">Вы: </i>';
+        else
+            var message = '';
+        message += list[i]['message']['body'];
+        if ('attachments' in list[i]['message'])
+            var attachment = '</br><i class="text-blue">' + attach[list[i]['message']['attachments'][0]['type']] + '</i>';
+        else
+            var attachment = '';
+        if (list[i]['message']['read_state'])
+            var background = 'bg-white';
+        else
+            var background = 'bg-unread';
+        var date = moment(list[i]['message']['date'] * 1000).format("DD.MM.YYYY HH:mm");
+
+        $('#dialogs').append(' \
+            <a href="/messages/all/' + link + '"><div class="item dialog ' + background + '" id="' + id + '"> \
+                <img src="' + image + '" alt="' + title + '" /> \
+                <p class="message text-black"> \
+                    <span class="name"> \
+                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + date + '</small> \
+                        ' + title + ' \
+                    </span> \
+                    ' + message + ' \
+                    ' + attachment + ' \
+                </p> \
+            </div></a> \
+        ');
+        if (!('chat_id' in list[i]['message'])) {
+            var params = {
+                'user_ids' : list[i]['message']['user_id'],
+                'fields' : 'photo_100,online'
+            }
+            $.core.getUsers(params, function(data) {
+                if (data[0]['online'])
+                    var online = '<i class="text-out">Online</i>';
+                else
+                    var online = '';
+                $('#user' + data[0]['id']).find("img").attr('src', data[0]['photo_100']);
+                $('#user' + data[0]['id']).find("span").append(data[0]['first_name'] + ' ' + data[0]['last_name'] + ' ' + online);
+            });
+        }
+    }
+}
+
+$.ui.scrollDialog = function(user) {
+    if ($('#dialogs').scrollTop() / $('#dialogs')[0].scrollHeight >= 0.5 && $('#dialogs').scrollTop() - lastTop > 2000) {
+        $.ui.getDialogs(user, current++);
+        lastTop = $('#dialogs').scrollTop();
     }
 }

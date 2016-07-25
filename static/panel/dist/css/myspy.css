@@ -21,3 +21,16 @@
 .friends .widget-user-username {
     font-size: 11pt;
 }
+
+.dialogs {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.bg-unread {
+    background-color: #e2e6ee;
+}
+
+.text-out {
+    color: #a0a0a0 !important;
+}

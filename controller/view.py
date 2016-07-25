@@ -23,7 +23,8 @@ def support():
 def messages_all():
     if (not 'user_id' in session):
         return render_template('main/index.html')
-    return render_template('panel/messages/all.html', menu=app.config['MENU'], path=request.path)
+    script = "$.ui.getDialogs(user, 0);" # CHANGE
+    return render_template('panel/dialog.html', menu=app.config['MENU'], path=request.path, script=script)
 
 
 def messages_important():

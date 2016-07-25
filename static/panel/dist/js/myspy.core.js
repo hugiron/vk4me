@@ -52,3 +52,36 @@ $.core.getGroups = function(params, callback) {
             }
         );
 }
+
+$.core.getDialogs = function(params, step, callback) {
+    params['count'] = 50;
+    params['offset'] = step * params['count'];
+    params['preview_length'] = 140;
+    $.core.request(
+        'messages.getDialogs',
+        params,
+        function(data) {
+            callback(data['items'])
+        }
+    );
+}
+
+$.core.getMessages = function(params, step, callback) {
+    params['count'] = 50;
+    params['offset'] = step * params['count'];
+    $.core.request(
+        'messages.getHistory',
+        params,
+        function(data) {
+            callback(data['items'])
+        }
+    );
+}
+
+$.core.getUsers = function(params, callback) {
+    $.core.request(
+        'users.get',
+        params,
+        callback
+    );
+}
