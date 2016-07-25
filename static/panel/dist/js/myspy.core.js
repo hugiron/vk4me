@@ -27,7 +27,6 @@ $.core.getFriends = function(params, callback) {
     params['offset'] = 0;
     params['count'] = 5000;
     for (var i = 0; i < (maxCount - 1) / params['count'] + 1; ++i, params['offset'] += params['count'])
-        alert(params['offset']);
         $.core.request(
             'friends.get',
             params,

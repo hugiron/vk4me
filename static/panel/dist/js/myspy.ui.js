@@ -44,13 +44,21 @@ $.ui.renderFriends = function(list) {
 }
 
 $.ui.getGroups = function(user) {
-    var params = getParams(user);
+    if (!user['active'])
+        return;
+    var params = {
+        'access_token' : user['access_token']
+    }
     $.core.getGroups(params, $.ui.renderGroups);
 }
 
 $.ui.getAdmin = function(user) {
-    var params = getParams(user);
-    params['filter'] = 'moder';
+    if (!user['active'])
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'filter' : 'moder'
+    }
     $.core.getGroups(params, $.ui.renderGroups);
 }
 
@@ -88,8 +96,11 @@ $.ui.renderGroups = function(list) {
 }
 
 $.ui.getDialogs = function(user, step) {
-    var params = {}
-    params['access_token'] = user['access_token'];
+    if (!user['active'])
+        return;
+    var params = {
+        'access_token' : user['access_token']
+    }
     $.core.getDialogs(params, step, $.ui.renderDialogs);
 }
 
