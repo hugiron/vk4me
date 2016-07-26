@@ -84,3 +84,19 @@ $.core.getUsers = function(params, callback) {
         callback
     );
 }
+
+$.core.getGroupsById = function(params, callback) {
+    $.core.request(
+        'groups.getById',
+        params,
+        callback
+    );
+}
+
+$.core.getChat = function(params, callback) {
+    $.core.request(
+        'messages.getChat',
+        params,
+        callback
+    );
+}

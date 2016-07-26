@@ -12,7 +12,8 @@
         config['last_top'] = 0;
     </script>
     <section class="content">
-        <section id="dialogs" class="dialogs chat col-lg-12" onscroll="$.ui.scrollDialog(config['user']);">
+        <section id="messages" class="messages chat col-lg-12" onscroll="$.ui.scrollMessage(config['user'], config['user_id']);">
+
         </section>
     </section>
     <script>
