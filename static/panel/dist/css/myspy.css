@@ -12,11 +12,11 @@
     background: #b6c2d7;
 }
 
-.message {
+.vkmessage {
     cursor: pointer;
 }
 
-.message:hover {
+.vkmessage:hover {
     background: #e2e6ee;
 }
 
@@ -45,4 +45,8 @@
 
 .text-out {
     color: #a0a0a0 !important;
+}
+
+.attach {
+    margin-left: 55px;
 }

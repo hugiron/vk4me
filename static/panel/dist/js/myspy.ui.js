@@ -324,18 +324,19 @@ $.ui.renderMessages = function(list, depth, parent) {
         else
             var background = 'bg-unread';
         if ('attachments' in list[i])
-            var attachments = '<div id="attachments_' + lastId + '"></div>';
+            var attachments = '<div class="attach" id="attachments_' + lastId + '"></div>';
         else
             var attachments = '';
 
         $('#' + parentId).append(' \
-            <div class="item message ' + background + '" id="' + lastId + '"> \
+            <div class="item vkmessage ' + background + '" id="' + lastId + '"> \
                 <img id="img_' + lastId + '" src="" alt="" /> \
                 <p class="message text-black"> \
                     <span class="name" id="name_' + lastId + '"> \
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + date + '</small> \
                     </span> \
                     ' + list[i]['body'] + ' \
+                    ' + attachments + ' \
                 </p> \
             </div> \
         ');
@@ -355,7 +356,38 @@ $.ui.scrollMessage = function(user, userId) {
 }
 
 $.ui.renderAttachments = function(list, id) {
+    /*list = list.sort(function(a, b) {
+        if (a['type'] > b['type'])
+            return 1;
+        else if (a['type'] < b['type'])
+            return -1;
+        return 0;
+    });*/
     for (var i = 0; i < list.length; ++i) {
-        // Render attachments
+        switch (list[i]['type']) {
+            case 'photo':
+                break
+            case 'video':
+                break
+            case 'audio':
+                $('#' + id).append('<a href="' + list[i]['audio']['url'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['audio']['artist'] + ' - ' + list[i]['audio']['title'] + '</i></a></br>');
+                break
+            case 'doc':
+                $('#' + id).append('<a href="' + list[i]['doc']['url'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['doc']['title'] + '</i></a></br>');
+                break
+            case 'wall':
+                $('#' + id).append('<a href="https://vk.com/wall' + list[i]['wall']['to_id'] + '_' + list[i]['wall']['id'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + attach[list[i]['type']]['title'] + '</i></a></br>');
+                break
+            case 'sticker':
+                $('#' + id).append('<i class="text-blue fa ' + attach[list[i]['type']]['icon'] + '"> ' + attach[list[i]['type']]['title'] + '</i></br><img src="' + list[i]['sticker']['photo_128'] + '" /></br>');
+                break
+            case 'link':
+                $('#' + id).append('<a href="' + list[i]['link']['url'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['link']['title'] + '</i></a></br>');
+                break
+            case 'gift':
+                $('#' + id).append('<i class="text-blue fa ' + attach[list[i]['type']]['icon'] + '"> ' + attach[list[i]['type']]['title'] + '</i></br><img src="' + list[i]['gift']['thumb_256'] + '" /></br>');
+                break
+            // wall_reply, market and market_album not was added
+        }
     }
 }
