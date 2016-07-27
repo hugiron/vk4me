@@ -12,6 +12,14 @@
     background: #b6c2d7;
 }
 
+.attachlist {
+    margin-bottom: 4px;
+}
+
+.attachlist:hover {
+    background: #e2e6ee;
+}
+
 .vkmessage {
     cursor: pointer;
 }
@@ -49,4 +57,20 @@
 
 .attach {
     margin-left: 55px;
+}
+
+.doc {
+    padding: 8px;
+}
+
+.attach-photo {
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border: 6px solid #ecf0f4;
+}
+
+.attach-photo:hover {
+    cursor: zoom-in;
 }

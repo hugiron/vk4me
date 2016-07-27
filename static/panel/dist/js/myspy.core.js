@@ -77,6 +77,14 @@ $.core.getMessages = function(params, step, callback) {
     );
 }
 
+$.core.getMessagesAttachments = function(params, callback) {
+    $.core.request(
+        'messages.getHistoryAttachments',
+        params,
+        callback
+    );
+}
+
 $.core.getUsers = function(params, callback) {
     $.core.request(
         'users.get',

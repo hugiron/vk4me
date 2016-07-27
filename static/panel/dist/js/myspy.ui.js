@@ -17,6 +17,10 @@ var attach = {
     'fwd' : {'title' : 'Пересланные сообщения', 'icon' : 'fa-envelope'}
 };
 
+var ext = ['gif', 'png', 'jpeg', 'jpg'];
+
+var prefix = ['Байт', 'КБ', 'МБ', 'ГБ', 'ТБ'];
+
 function getParams(user) {
     var params = {}
     if (user['active'])
@@ -28,6 +32,13 @@ function getParams(user) {
 
 function randStr(n) {
     return Math.random().toString(36).slice(2, 2 + Math.max(1, Math.min(n, 10)) );
+}
+
+function getSize(size) {
+    var index = 0;
+    for (; index < prefix.length && size >= 1024; ++index)
+        size /= 1024;
+    return (size | 0) + ' ' + prefix[index];
 }
 
 $.ui = {}
@@ -392,7 +403,6 @@ $.ui.renderAttachments = function(list, id) {
                 break
             case 'doc':
                 var itemId = randStr(10);
-                var ext = ['gif', 'png', 'jpeg', 'jpg'];
                 $('#' + id).append('<a href="' + list[i]['doc']['url'] + '" id="' + itemId + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['doc']['title'] + '</i></a></br>');
                 if ('ext' in list[i]['doc'] && ext.indexOf(list[i]['doc']['ext']) != -1)
                     enablePopup(itemId, 'image');
@@ -426,4 +436,171 @@ $.ui.renderVideo = function(user, video, id) {
                 $('#' + id).attr('href', list[i]['player']);
         }
     );
+}
+
+$.ui.getAttachAudio = function(user, userId) {
+    $('#list').attr('onscroll', '$.ui.scrollAttachAudio(config.user, config.user_id);');
+    if (!user['active'] || config['next'] == 'null')
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'peer_id' : userId,
+        'media_type' : 'audio',
+        'count' : 200
+    }
+    if ('next' in config)
+        params['start_from'] = config['next'];
+    $.core.getMessagesAttachments(params, function(data) {
+        if ('next_from' in data)
+            config['next'] = data['next_from'];
+        else
+            config['next'] = 'null';
+        $.ui.renderAttachAudio(data['items']);
+    });
+}
+
+$.ui.renderAttachAudio = function(list) {
+    for (var i = 0; i < list.length; ++i) {
+        var time = (list[i]['audio']['duration'] / 60 | 0) + ':';
+        if (list[i]['audio']['duration'] % 60 < 10)
+            time += 0;
+        time += (list[i]['audio']['duration'] % 60);
+        if ('url' in list[i]['audio'])
+            $('#list').append(' \
+                <div class="col-md-12 attachlist"><a href="' + list[i]['audio']['url'] + '" target="_blank"> \
+                    <i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['audio']['artist'] + ' - ' + list[i]['audio']['title'] + '</i> \
+                    <i class="text-out pull-right">' + time + '</i> \
+                </a></div> \
+            ');
+    }
+}
+
+$.ui.scrollAttachAudio = function(user, userId) {
+    if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
+        $.ui.getAttachAudio(user, userId);
+        config.last_top = $('#list').scrollTop();
+    }
+}
+
+$.ui.getAttachDoc = function(user, userId) {
+    $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
+    if (!user['active'] || config['next'] == 'null')
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'peer_id' : userId,
+        'media_type' : 'doc',
+        'count' : 200
+    }
+    if ('next' in config)
+        params['start_from'] = config['next'];
+    $.core.getMessagesAttachments(params, function(data) {
+        if ('next_from' in data)
+            config['next'] = data['next_from'];
+        else
+            config['next'] = 'null';
+        $.ui.renderAttachDoc(data['items']);
+    });
+}
+
+$.ui.renderAttachDoc = function(list) {
+    for (var i = 0; i < list.length; ++i) {
+        var itemId = randStr(8);
+        if ('ext' in list[i]['doc'])
+            var icon = '<small class="pull-left label bg-blue">.' + list[i]['doc']['ext'] + '</small>';
+        else
+            var icon = '<i class="pull-left fa ' + attach['doc']['icon'] + '"></i>'
+        $('#list').append(' \
+            <a id="' + itemId + '" href="' + list[i]['doc']['url'] + '" target="_blank"><div class="col-md-12 attachlist doc"> \
+                ' + icon + ' \
+                <span style="margin-left: 6px;" class="text-blue">' + list[i]['doc']['title'] + '</span> \
+                <span class="text-out pull-right">' + getSize(list[i]['doc']['size']) + '</span> \
+            </div></a> \
+        ');
+        if ('ext' in list[i]['doc'] && ext.indexOf(list[i]['doc']['ext']) != -1)
+            enablePopup(itemId, 'image');
+    }
+}
+
+$.ui.scrollAttachDoc = function(user, userId) {
+    if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
+        $.ui.getAttachDoc(user, userId);
+        config.last_top = $('#list').scrollTop();
+    }
+}
+
+$.ui.getAttachDoc = function(user, userId) {
+    $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
+    if (!user['active'] || config['next'] == 'null')
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'peer_id' : userId,
+        'media_type' : 'doc',
+        'count' : 200
+    }
+    if ('next' in config)
+        params['start_from'] = config['next'];
+    $.core.getMessagesAttachments(params, function(data) {
+        if ('next_from' in data)
+            config['next'] = data['next_from'];
+        else
+            config['next'] = 'null';
+        $.ui.renderAttachDoc(data['items']);
+    });
+}
+
+$.ui.getAttachPhoto = function(user, userId) {
+    $('#list').attr('onscroll', '$.ui.scrollAttachPhoto(config.user, config.user_id);');
+    if (!user['active'] || config['next'] == 'null')
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'peer_id' : userId,
+        'media_type' : 'photo',
+        'count' : 48
+    }
+    if ('next' in config)
+        params['start_from'] = config['next'];
+    $.core.getMessagesAttachments(params, function(data) {
+        if ('next_from' in data)
+            config['next'] = data['next_from'];
+        else
+            config['next'] = 'null';
+        $.ui.renderAttachPhoto(data['items']);
+    });
+}
+
+$.ui.renderAttachPhoto = function(list) {
+    for (var i = 0; i < list.length; ++i) {
+        if (i % 4 == 0) {
+            rowId = randStr(8);
+            $('#list').append('<div class="row" id="' + rowId + '"></div>');
+        }
+        var image = 'background-image: url(' + list[i]['photo']['photo_604'] + ');';
+        var keys = Object.keys(list[i]['photo']).reverse();
+        var origin = null;
+        for (var j = 0; j < keys.length && origin == null; ++j)
+            if (keys[j].search('photo_') != -1)
+                origin = list[i]['photo'][keys[j]];
+        $('#' + rowId).append(' \
+            <a href="' + origin + '"> \
+                <div class="col-md-3 attach-photo" style="' + image + '"></div> \
+            </a> \
+        ');
+    }
+    $('#list').magnificPopup({
+            delegate: 'a',
+            type: 'image',
+            gallery: {
+                enabled:true
+            }
+    });
+}
+
+$.ui.scrollAttachPhoto = function(user, userId) {
+    if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
+        $.ui.getAttachPhoto(user, userId);
+        config.last_top = $('#list').scrollTop();
+    }
 }
