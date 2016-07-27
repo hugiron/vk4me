@@ -301,6 +301,12 @@ $.ui.getMessages = function(user, userId, step) {
     });
 }
 
+function enablePopup(id, type) {
+    $('#' + id).magnificPopup({
+        type: type
+    });
+}
+
 $.ui.renderMessages = function(list, depth, parent) {
     if (depth == 0)
         return;
@@ -356,24 +362,43 @@ $.ui.scrollMessage = function(user, userId) {
 }
 
 $.ui.renderAttachments = function(list, id) {
-    /*list = list.sort(function(a, b) {
+    list = list.sort(function(a, b) {
         if (a['type'] > b['type'])
             return 1;
         else if (a['type'] < b['type'])
             return -1;
         return 0;
-    });*/
+    });
     for (var i = 0; i < list.length; ++i) {
         switch (list[i]['type']) {
             case 'photo':
+                var photo = null;
+                var keys = Object.keys(list[i]['photo']).reverse();
+                for (var j = 0; j < keys.length && photo == null; ++j) {
+                    if (keys[j].search('photo_') != -1)
+                        photo = list[i]['photo'][keys[j]];
+                }
+                if (photo != null) {
+                    var itemId = randStr(10);
+                    $('#' + id).append('<a id="' + itemId + '" href="' + photo + '"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + attach[list[i]['type']]['title'] + '</i></a></br>')
+                    enablePopup(itemId, 'image');
+                }
                 break
             case 'video':
+                var itemId = randStr(10);
+                $('#' + id).append('<a id="' + itemId + '" href=""><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['video']['title'] + '</i></a></br>')
+                $.ui.renderVideo(config['user'], list[i]['video']['owner_id'] + '_' + list[i]['video']['id'] + '_' + list[i]['video']['access_key'], itemId);
+                enablePopup(itemId, 'iframe');
                 break
             case 'audio':
                 $('#' + id).append('<a href="' + list[i]['audio']['url'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['audio']['artist'] + ' - ' + list[i]['audio']['title'] + '</i></a></br>');
                 break
             case 'doc':
-                $('#' + id).append('<a href="' + list[i]['doc']['url'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['doc']['title'] + '</i></a></br>');
+                var itemId = randStr(10);
+                var ext = ['gif', 'png', 'jpeg', 'jpg'];
+                $('#' + id).append('<a href="' + list[i]['doc']['url'] + '" id="' + itemId + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + list[i]['doc']['title'] + '</i></a></br>');
+                if ('ext' in list[i]['doc'] && ext.indexOf(list[i]['doc']['ext']) != -1)
+                    enablePopup(itemId, 'image');
                 break
             case 'wall':
                 $('#' + id).append('<a href="https://vk.com/wall' + list[i]['wall']['to_id'] + '_' + list[i]['wall']['id'] + '" target="_blank"><i class="fa ' + attach[list[i]['type']]['icon'] + '"> ' + attach[list[i]['type']]['title'] + '</i></a></br>');
@@ -390,4 +415,18 @@ $.ui.renderAttachments = function(list, id) {
             // wall_reply, market and market_album not was added
         }
     }
+}
+
+$.ui.renderVideo = function(user, video, id) {
+    $.core.getVideo(
+        {
+            'access_token' : user['access_token'],
+            'videos' : video,
+            'extended' : 0
+        },
+        function(list) {
+            for (var i = 0; i < list.length; ++i)
+                $('#' + id).attr('href', list[i]['player']);
+        }
+    );
 }

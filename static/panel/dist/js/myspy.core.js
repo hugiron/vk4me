@@ -100,3 +100,13 @@ $.core.getChat = function(params, callback) {
         callback
     );
 }
+
+$.core.getVideo = function(params, callback) {
+    $.core.request(
+        'video.get',
+        params,
+        function(data) {
+            callback(data['items'])
+        }
+    );
+}
