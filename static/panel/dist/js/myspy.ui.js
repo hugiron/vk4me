@@ -297,7 +297,7 @@ $.ui.getMessages = function(user, userId, step) {
         'peer_id' : userId
     }
     $.core.getMessages(params, step, function(list) {
-        $.ui.renderMessages(list, 12, 'messages');
+        $.ui.renderMessages(list, 0, 'messages');
     });
 }
 
@@ -308,15 +308,12 @@ function enablePopup(id, type) {
 }
 
 $.ui.renderMessages = function(list, depth, parent) {
-    if (depth == 0)
-        return;
     var parentId = randStr(8);
-    if (depth < 12) {
-        $('#' + parent).append('<div class="col-md-offset-' + (12 - depth) + '" style="margin-bottom: 5px;"><i class="fa fa-envelope text-blue"> Пересланные сообщения</i></div>')
-        var style = 'style="border-left: 1px solid #4873b4; padding-left: 2px;"';
+    if (depth > 0) {
+        $('#' + parent).append('<div class="attach" style="margin-bottom: 5px;"><i class="fa fa-envelope text-blue"> Пересланные сообщения</i></div>')
+        $('#' + parent).append('<div id="' + parentId + '" class="attach" style="border-left: 1px solid #4873b4; padding-left: 5px;"></div>');
     } else
-        var style = '';
-    $('#' + parent).append('<div id="' + parentId + '" class="col-md-offset-' + (12 - depth) + '" ' + style + '></div>');
+        $('#' + parent).append('<div id="' + parentId + '" class="col-md-12"></div>');
 
     for (var i = 0; i < list.length; ++i) {
         if ('from_id' in list[i])
@@ -325,7 +322,7 @@ $.ui.renderMessages = function(list, depth, parent) {
             var from = list[i]['user_id'];
         var lastId = randStr(8);
         var date = moment(list[i]['date'] * 1000).format("DD.MM.YYYY HH:mm");
-        if (list[i]['read_state'])
+        if (!('read_state' in list[i]) || list[i]['read_state'])
             var background = 'bg-white';
         else
             var background = 'bg-unread';
@@ -350,7 +347,7 @@ $.ui.renderMessages = function(list, depth, parent) {
         if ('attachments' in list[i])
             $.ui.renderAttachments(list[i]['attachments'], 'attachments_' + lastId);
         if ('fwd_messages' in list[i])
-            $.ui.renderMessages(list[i]['fwd_messages'], depth - 1, lastId);
+            $.ui.renderMessages(list[i]['fwd_messages'], depth + 1, lastId);
     }
 }
 
