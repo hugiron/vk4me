@@ -26,11 +26,32 @@ def dialogs_all():
     script = "$.ui.getDialogs(config.user, config.current++);"
     return render_template('panel/dialog.html', menu=app.config['MENU'], path=request.path, script=script)
 
+
 def messages_all(id):
     if (not 'user_id' in session):
         return redirect('/')
     script = "config.user_id = " + str(id) + "; $.ui.getMessages(config.user, config.user_id, config.current++);"
     return render_template('panel/message.html', menu=app.config['MENU'], path=request.path, script=script)
+
+
+def messages_all_video(id):
+    if (not 'user_id' in session):
+        return redirect('/')
+
+
+def messages_all_audio(id):
+    if (not 'user_id' in session):
+        return redirect('/')
+
+
+def messages_all_photo(id):
+    if (not 'user_id' in session):
+        return redirect('/')
+
+
+def messages_all_doc(id):
+    if (not 'user_id' in session):
+        return redirect('/')
 
 
 def messages_important():

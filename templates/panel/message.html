@@ -12,6 +12,50 @@
         config['last_top'] = 0;
     </script>
     <section class="content">
+        <div class="nav-tabs-custom pull-right">
+            <ul class="nav nav-tabs">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-paperclip"> Показать вложения</i> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <script>
+                            var dropdown = [
+                                {
+                                    'link' : '/photo',
+                                    'icon' : 'fa-camera',
+                                    'title' : 'Фотографии'
+                                },
+                                {
+                                    'link' : '/video',
+                                    'icon' : 'fa-video-camera',
+                                    'title' : 'Видеозаписи'
+                                },
+                                {
+                                    'link' : '/audio',
+                                    'icon' : 'fa-music',
+                                    'title' : 'Аудиозаписи'
+                                },
+                                {
+                                    'link' : '/doc',
+                                    'icon' : 'fa-file',
+                                    'title' : 'Документы'
+                                }
+                            ];
+                            for (var i = 0; i < dropdown.length; ++i) {
+                                document.write(' \
+                                    <li role="presentation"> \
+                                        <a role="menuitem" tabindex="1" href="' + window.location.pathname + dropdown[i]['link'] + '"> \
+                                            <i class="fa ' + dropdown[i]['icon'] + '"> ' + dropdown[i]['title'] + '</i> \
+                                        </a> \
+                                    </li> \
+                                ');
+                            }
+                        </script>
+                    </ul>
+                </li>
+            </ul>
+        </div>
         <section id="messages" class="messages chat col-lg-12" onscroll="$.ui.scrollMessage(config['user'], config['user_id']);">
 
         </section>

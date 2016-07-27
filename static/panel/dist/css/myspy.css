@@ -20,12 +20,12 @@
     background: #e2e6ee;
 }
 
-.friends {
+.list {
     overflow-y: auto;
     height: 100vh;
 }
 
-.friends .widget-user-username {
+.list .widget-user-username {
     font-size: 11pt;
 }
 

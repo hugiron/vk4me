@@ -12,6 +12,10 @@ app.add_url_rule('/friends/all', view_func=friends_all, methods=['GET'], strict_
 
 app.add_url_rule('/messages/all', view_func=dialogs_all, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/messages/all/<string:id>', view_func=messages_all, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/messages/all/<string:id>/video', view_func=messages_all_video, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/messages/all/<string:id>/audio', view_func=messages_all_audio, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/messages/all/<string:id>/photo', view_func=messages_all_photo, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/messages/all/<string:id>/doc', view_func=messages_all_doc, methods=['GET'], strict_slashes=False)
 #app.add_url_rule('/messages/important', view_func=messages_important, methods=['GET'], strict_slashes=False)
 #app.add_url_rule('/messages/cache', view_func=dialogs_cache, methods=['GET'], strict_slashes=False)
 

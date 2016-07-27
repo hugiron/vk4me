@@ -41,7 +41,7 @@ $.ui.renderFriends = function(list) {
     for (var i = 0; i < list.length; ++i) {
         if (i % 3 == 0) {
             parent = randStr(8);
-            $('#friends').append('<div class="row" id="' + parent + '"></div>')
+            $('#list').append('<div class="row" id="' + parent + '"></div>')
         }
         var name = list[i]['first_name'] + ' ' + list[i]['last_name'];
         if (list[i]['online']) {
@@ -91,7 +91,7 @@ $.ui.renderGroups = function(list) {
     for (var i = 0; i < list.length; ++i) {
         if (i % 3 == 0) {
             parent = randStr(8);
-            $('#friends').append('<div class="row" id="' + parent + '"></div>')
+            $('#list').append('<div class="row" id="' + parent + '"></div>')
         }
 
         var url = "/groups/" + list[i]['id'];
@@ -285,7 +285,7 @@ $.ui.renderCompany = function(userId, hash) {
     if (userId > 0)
         var link = 'https://vk.com/id' + userId;
     else
-        var link = 'https://vk.com/club' + userId;
+        var link = 'https://vk.com/club' + (-userId);
     $('#name_' + hash).append('<a href="' + link + '" target= "_blank">' + config['company'][userId]['name'] + " " + online + '</a>')
 }
 
@@ -359,13 +359,13 @@ $.ui.scrollMessage = function(user, userId) {
 }
 
 $.ui.renderAttachments = function(list, id) {
-    list = list.sort(function(a, b) {
+    /* list = list.sort(function(a, b) {
         if (a['type'] > b['type'])
             return 1;
         else if (a['type'] < b['type'])
             return -1;
         return 0;
-    });
+    }); */
     for (var i = 0; i < list.length; ++i) {
         switch (list[i]['type']) {
             case 'photo':
