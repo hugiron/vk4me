@@ -31,33 +31,35 @@ def messages_all(id):
     if (not 'user_id' in session):
         return redirect('/')
     script = "config.user_id = " + str(id) + "; $.ui.getMessages(config.user, config.user_id, config.current++);"
-    return render_template('panel/message.html', menu=app.config['MENU'], path=request.path, script=script)
+    return render_template('panel/message.html', menu=app.config['MENU'], path=request.path, script=script, id=id)
 
 
 def messages_all_video(id):
     if (not 'user_id' in session):
         return redirect('/')
+    script = "config.user_id = " + str(id) + "; config.last_top = 0; $.ui.getAttachVideo(config.user, config.user_id);"
+    return render_template('panel/attachment.html', menu=app.config['MENU'], path=request.path, script=script, id=id)
 
 
 def messages_all_audio(id):
     if (not 'user_id' in session):
         return redirect('/')
     script = "config.user_id = " + str(id) + "; config.last_top = 0; $.ui.getAttachAudio(config.user, config.user_id);"
-    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
+    return render_template('panel/attachment.html', menu=app.config['MENU'], path=request.path, script=script, id=id)
 
 
 def messages_all_photo(id):
     if (not 'user_id' in session):
         return redirect('/')
     script = "config.user_id = " + str(id) + "; config.last_top = 0; $.ui.getAttachPhoto(config.user, config.user_id);"
-    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
+    return render_template('panel/attachment.html', menu=app.config['MENU'], path=request.path, script=script, id=id)
 
 
 def messages_all_doc(id):
     if (not 'user_id' in session):
         return redirect('/')
     script = "config.user_id = " + str(id) + "; config.last_top = 0; $.ui.getAttachDoc(config.user, config.user_id);"
-    return render_template('panel/list.html', menu=app.config['MENU'], path=request.path, script=script)
+    return render_template('panel/attachment.html', menu=app.config['MENU'], path=request.path, script=script, id=id)
 
 
 def messages_important():

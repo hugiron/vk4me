@@ -105,7 +105,7 @@ $.ui.renderGroups = function(list) {
             $('#list').append('<div class="row" id="' + parent + '"></div>')
         }
 
-        var url = "/groups/" + list[i]['id'];
+        var url = "https://vk.com/club" + list[i]['id'];
         var isClose = closeStatus[list[i]['is_closed']] + ' группа';
         var members = list[i]['members_count'].toString() + ' участник';
         if (list[i]['members_count'] % 10 > 1 && list[i]['members_count'] % 10 < 5 && (list[i]['members_count'] % 100 < 10 || list[i]['members_count'] % 100 > 19))
@@ -572,8 +572,10 @@ $.ui.getAttachPhoto = function(user, userId) {
 }
 
 $.ui.renderAttachPhoto = function(list) {
-    for (var i = 0; i < list.length; ++i) {
-        if (i % 4 == 0) {
+    if (!('index' in config))
+        config['index'] = 0;
+    for (var i = 0; i < list.length; ++i, ++config['index']) {
+        if (config['index'] % 4 == 0) {
             rowId = randStr(8);
             $('#list').append('<div class="row" id="' + rowId + '"></div>');
         }
@@ -601,6 +603,58 @@ $.ui.renderAttachPhoto = function(list) {
 $.ui.scrollAttachPhoto = function(user, userId) {
     if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
         $.ui.getAttachPhoto(user, userId);
+        config.last_top = $('#list').scrollTop();
+    }
+}
+
+$.ui.getAttachVideo = function(user, userId) {
+    $('#list').attr('onscroll', '$.ui.scrollAttachVideo(config.user, config.user_id);');
+    if (!user['active'] || config['next'] == 'null')
+        return;
+    var params = {
+        'access_token' : user['access_token'],
+        'peer_id' : userId,
+        'media_type' : 'video',
+        'count' : 48
+    }
+    if ('next' in config)
+        params['start_from'] = config['next'];
+    $.core.getMessagesAttachments(params, function(data) {
+        if ('next_from' in data)
+            config['next'] = data['next_from'];
+        else
+            config['next'] = 'null';
+        $.ui.renderAttachVideo(data['items']);
+    });
+}
+
+$.ui.renderAttachVideo = function(list) {
+    if (!('index' in config))
+        config['index'] = 0;
+    for (var i = 0; i < list.length; ++i, ++config['index']) {
+        if (config['index'] % 4 == 0) {
+            rowId = randStr(8);
+            $('#list').append('<div class="row" id="' + rowId + '"></div>');
+        }
+        var videoId = randStr(10);
+        var image = 'background-image: url(' + list[i]['video']['photo_320'] + ');';
+        var title = list[i]['video']['title'];
+        $('#' + rowId).append(' \
+            <a id="' + videoId + '" href="' + '' + '"> \
+                <div class="col-md-3 attach-video-parent"> \
+                    <div class="attach-video" style="' + image + '"></div> \
+                    <div class="attach-video-desc text-blue">' + title + '</div> \
+                </div> \
+            </a> \
+        ');
+        $.ui.renderVideo(config['user'], list[i]['video']['owner_id'] + '_' + list[i]['video']['id'] + '_' + list[i]['video']['access_key'], videoId)
+        enablePopup(videoId, 'iframe');
+    }
+}
+
+$.ui.scrollAttachVideo = function(user, userId) {
+    if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
+        $.ui.getAttachVideo(user, userId);
         config.last_top = $('#list').scrollTop();
     }
 }

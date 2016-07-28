@@ -1,16 +1,5 @@
 {% extends "panel/base.html" %}
 {% block content %}
-    <script>
-        config['user'] = {
-            'active' : 1,
-            'access_token' : 'd59d9cb93cb7170fc47b53443f468544770e6e53e271c2fd64b8368c7180db10a719ab9ce665e2bbf54e7',
-            'user_id' : 46311991
-        };
-    </script>
-    <script>
-        config['current'] = 0;
-        config['last_top'] = 0;
-    </script>
     <section class="content">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
@@ -38,8 +27,12 @@
                                 }
                             ];
                             for (var i = dropdown.length - 1; i >= 0; --i) {
+                                if (window.location.pathname.indexOf(dropdown[i]['link']) != -1)
+                                    var active = ' class="active"';
+                                else
+                                    var active = '';
                                 document.write(' \
-                                    <li> \
+                                    <li' + active + '> \
                                         <a href="/messages/all/' + {{ id }} + dropdown[i]['link'] + '"> \
                                             <i class="fa ' + dropdown[i]['icon'] + '"> ' + dropdown[i]['title'] + '</i> \
                                         </a> \
@@ -48,17 +41,21 @@
                             }
                  </script>
                 <li class="pull-left header">
-                    <a href="/messages/all" class="text-muted" title="Диалоги">
+                    <a href="/messages/all/{{ id }}" class="text-muted" title="Личные сообщения">
                         <i class="fa fa-chevron-left"></i>
                     </a>
                 </li>
             </ul>
         </div>
-        <section id="messages" class="messages chat col-lg-12" onscroll="$.ui.scrollMessage(config['user'], config['user_id']);">
-
+        <section id="list" class="list col-lg-12">
         </section>
     </section>
     <script>
+        config['user'] = {
+            'active' : 1,
+            'access_token' : 'd59d9cb93cb7170fc47b53443f468544770e6e53e271c2fd64b8368c7180db10a719ab9ce665e2bbf54e7',
+            'user_id' : 46311991
+        };
         {{ script }}
     </script>
 {% endblock %}
