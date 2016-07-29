@@ -5,11 +5,9 @@
         </section>
     </section>
     <script>
-        config['user'] = {
-            'active' : 1,
-            'access_token' : 'd59d9cb93cb7170fc47b53443f468544770e6e53e271c2fd64b8368c7180db10a719ab9ce665e2bbf54e7',
-            'user_id' : 46311991
-        };
-        {{ script }}
+        function load() {
+            {{ script | safe }}
+        }
+        load();
     </script>
 {% endblock %}

@@ -118,7 +118,7 @@ $.ui.renderGroups = function(list) {
             var member = '';
 
         $('#' + parent).append(' \
-            <a href="' + url + '" title="' + list[i]['name'] + '"> \
+            <a href="' + url + '" target="_blank" title="' + list[i]['name'] + '"> \
              <div class="col-md-4 col-sm-6 col-xs-12"><div class="box box-widget widget-user-2"> \
                 <div class="widget-user-header bg-white"> \
                       <div class="widget-user-image"> \
@@ -134,13 +134,20 @@ $.ui.renderGroups = function(list) {
     }
 }
 
-$.ui.getDialogs = function(user, step) {
+$.ui.getDialogs = function(user) {
     if (!user['active'])
         return;
     var params = {
         'access_token' : user['access_token']
     }
-    $.core.getDialogs(params, step, $.ui.renderDialogs);
+    if ('last_id' in config) {
+        params['start_message_id'] = config['last_id'];
+        params['offset'] = 1;
+    }
+    $.core.getDialogs(params, function(list) {
+        config['last_id'] = list[list.length - 1]['message']['id'];
+        $.ui.renderDialogs(list);
+    });
 }
 
 $.ui.renderDialogs = function(list) {
@@ -220,7 +227,7 @@ $.ui.renderDialogs = function(list) {
 
 $.ui.scrollDialog = function(user) {
     if ($('#dialogs').scrollTop() / $('#dialogs')[0].scrollHeight >= 0.5 && $('#dialogs').scrollTop() - config.last_top > 2000) {
-        $.ui.getDialogs(user, config.current++);
+        $.ui.getDialogs(user);
         config.last_top = $('#dialogs').scrollTop();
     }
 }
@@ -300,14 +307,19 @@ $.ui.renderCompany = function(userId, hash) {
     $('#name_' + hash).append('<a href="' + link + '" target= "_blank">' + config['company'][userId]['name'] + " " + online + '</a>')
 }
 
-$.ui.getMessages = function(user, userId, step) {
+$.ui.getMessages = function(user, userId) {
     if (!user['active'])
         return;
     var params = {
         'access_token' : user['access_token'],
         'peer_id' : userId
     }
-    $.core.getMessages(params, step, function(list) {
+    if ('last_id' in config) {
+        params['start_message_id'] = config['last_id'];
+        params['offset'] = 1;
+    }
+    $.core.getMessages(params, function(list) {
+        config['last_id'] = list[list.length - 1]['id'];
         $.ui.renderMessages(list, 0, 'messages');
     });
 }
@@ -364,7 +376,7 @@ $.ui.renderMessages = function(list, depth, parent) {
 
 $.ui.scrollMessage = function(user, userId) {
     if ($('#messages').scrollTop() / $('#messages')[0].scrollHeight >= 0.5 && $('#messages').scrollTop() - config.last_top > 2000) {
-        $.ui.getMessages(user, userId, config.current++);
+        $.ui.getMessages(user, userId);
         config.last_top = $('#messages').scrollTop();
     }
 }
@@ -657,4 +669,13 @@ $.ui.scrollAttachVideo = function(user, userId) {
         $.ui.getAttachVideo(user, userId);
         config.last_top = $('#list').scrollTop();
     }
+}
+
+$.ui.changeUser = function(option) {
+    config['user'] = config['users'][option];
+    $('#avatar').attr('src', config['user']['photo']);
+    $('#vklink').attr('href', 'https://vk.com/id' + config['user']['user_id']);
+    load();
+    if ($.core.supportsLocalStorage())
+        localStorage.setItem('current', option);
 }

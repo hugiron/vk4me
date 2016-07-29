@@ -4,6 +4,14 @@ if (typeof jQuery === "undefined") {
 
 $.core = {}
 
+$.core.supportsLocalStorage = function() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+}
+
 $.core.request = function(method, params, callback) {
     params['v'] = '5.53';
     $.ajax({
@@ -52,9 +60,8 @@ $.core.getGroups = function(params, callback) {
         );
 }
 
-$.core.getDialogs = function(params, step, callback) {
+$.core.getDialogs = function(params, callback) {
     params['count'] = 50;
-    params['offset'] = step * params['count'];
     params['preview_length'] = 140;
     $.core.request(
         'messages.getDialogs',
@@ -65,9 +72,8 @@ $.core.getDialogs = function(params, step, callback) {
     );
 }
 
-$.core.getMessages = function(params, step, callback) {
+$.core.getMessages = function(params, callback) {
     params['count'] = 50;
-    params['offset'] = step * params['count'];
     $.core.request(
         'messages.getHistory',
         params,
