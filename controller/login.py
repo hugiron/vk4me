@@ -1,19 +1,17 @@
-from flask import session, redirect, request
-
-
-def prelogin():
-    try:
-        login = request.form['login']
-        password = request.form['password']
-        email = request.form['email']
-        pass
-    except:
-        pass
+from flask import session, redirect, request, render_template
+from controller.handler import handler_login, handler_registry, handler_recovery
 
 
 def login():
-    session['user_id'] = 1
-    return redirect('/')
+    if 'user_id' in session:
+        return redirect('/')
+    if request.method == 'GET':
+        return render_template('main/login.html', form={})
+    elif request.method == 'POST':
+        try:
+            return handler_login(request.form)
+        except Exception as msg:
+            return render_template('main/login.html', error=str(msg), form=request.form)
 
 
 def logout():
@@ -22,8 +20,28 @@ def logout():
 
 
 def registry():
-    pass
+    if 'user_id' in session:
+        return redirect('/')
+    if request.method == 'GET':
+        return render_template('main/registry.html', form={})
+    elif request.method == 'POST':
+        try:
+            return handler_registry(request.form)
+        except Exception as msg:
+            return render_template('main/registry.html', error=str(msg), form=request.form)
 
 
 def recovery():
-    pass
+    try:
+        if request.method == 'GET':
+            if 'key' in request.args:
+                pass
+            else:
+                return render_template('main/recovery.html')
+        elif request.method == 'POST':
+            if 'user_id' in session:
+                pass
+            else:
+                return handler_recovery(request.form)
+    except Exception as msg:
+        return render_template('main/recovery.html', error=str(msg))

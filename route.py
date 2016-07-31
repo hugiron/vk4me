@@ -22,8 +22,7 @@ app.add_url_rule('/messages/all/<string:id>/doc', view_func=messages_all_doc, me
 app.add_url_rule('/groups/all', view_func=groups_all, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/groups/admin', view_func=groups_admin, methods=['GET'], strict_slashes=False)
 
-app.add_url_rule('/api/prelogin', view_func=prelogin, methods=['POST'], strict_slashes=False)
-app.add_url_rule('/api/login', view_func=login, methods=['POST'], strict_slashes=False)
-app.add_url_rule('/api/logout', view_func=logout, methods=['GET'], strict_slashes=False)
-app.add_url_rule('/api/registry', view_func=registry, methods=['GET', 'POST'], strict_slashes=False)
-app.add_url_rule('/api/recovery', view_func=recovery, methods=['GET', 'POST'], strict_slashes=False)
+app.add_url_rule('/login', view_func=login, methods=['GET', 'POST'], strict_slashes=False)
+app.add_url_rule('/logout', view_func=logout, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/registry', view_func=registry, methods=['GET', 'POST'], strict_slashes=False)
+app.add_url_rule('/recovery', view_func=recovery, methods=['GET', 'POST'], strict_slashes=False)
