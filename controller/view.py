@@ -5,6 +5,7 @@ from server import app
 def index():
     if (not 'user_id' in session):
         return redirect('/login')
+    print(str(render_template('panel/index.html', menu=app.config['MENU'], path=request.path)))
     return render_template('panel/index.html', menu=app.config['MENU'], path=request.path)
 
 

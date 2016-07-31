@@ -1,5 +1,6 @@
 from flask import session, redirect, request, render_template
-from controller.handler import handler_login, handler_registry, handler_recovery
+from controller.handler import handler_login, handler_registry, handler_recovery, handler_recovery_confirm, \
+    handler_recovery_change
 
 
 def login():
@@ -32,15 +33,17 @@ def registry():
 
 
 def recovery():
+    if 'user_id' in session:
+        return redirect('/')
     try:
         if request.method == 'GET':
             if 'key' in request.args:
-                pass
+                return handler_recovery_confirm(request.args.get('key'))
             else:
                 return render_template('main/recovery.html')
         elif request.method == 'POST':
-            if 'user_id' in session:
-                pass
+            if 'user' in session:
+                return handler_recovery_change(request.form)
             else:
                 return handler_recovery(request.form)
     except Exception as msg:
