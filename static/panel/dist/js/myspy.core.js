@@ -21,8 +21,14 @@ $.core.request = function(method, params, callback) {
         success: function(data) {
             if (!('error' in data))
                 callback(data['response']);
-            else if (data['error']['error_code'] == 5)
-                location.reload();
+            else if (data['error']['error_code'] == 5) {
+                $('#access_denied').html(' \
+                    <div class="callout callout-danger"> \
+                        <h4>Доступ к профилю потерян!</h4> \
+                        <p>К сожалению, пользователь изменил пароль или администрация ВКонтакте заблокировала доступ к профилю. Попробуйте получить доступ <a href="#">еще раз</a>.</p> \
+                    </div> \
+                ');
+            }
         },
         dataType: 'jsonp'
     });
@@ -123,4 +129,14 @@ $.core.getVideo = function(params, callback) {
             callback(data['items'])
         }
     );
+}
+
+$.core.removeUser = function(id) {
+    $.ajax({
+        type: "POST",
+        url: "/user/remove/" + id,
+        success: function(data) {
+            location.reload();
+        }
+    });
 }

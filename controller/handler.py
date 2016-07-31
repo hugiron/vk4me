@@ -76,6 +76,7 @@ def handler_recovery_change(form):
     user = User.objects(id=ObjectId(session['user'])).first()
     if not user:
         raise Exception('Пользователя не существует')
+    Recovery.objects(user_id=session['user']).delete()
     session.clear()
     session['user_id'] = str(user.id)
     session['rate'] = user.rate
@@ -96,3 +97,18 @@ def send(email, subject, body):
     server.login(app.config['SMTP_LOGIN'], app.config['SMTP_PASSWORD'])
     server.sendmail(app.config['SMTP_LOGIN'], email, message.as_string())
     server.quit()
+
+
+def get_account_list(id):
+    return User.objects(id=ObjectId(id)).first().account
+
+
+def remove_user(id):
+    user = User.objects(Q(id=ObjectId(session['user_id']))).first()
+    if not user:
+        return
+    for i in range(len(user.account)):
+        if id == user.account[i]['user_id']:
+            del user.account[i]
+            user.save()
+            break

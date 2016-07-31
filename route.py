@@ -2,6 +2,7 @@ from server import app
 
 from controller.view import *
 from controller.login import *
+from controller.system import *
 
 app.add_url_rule('/', view_func=index, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/faq', view_func=faq, methods=['GET'], strict_slashes=False)
@@ -26,3 +27,5 @@ app.add_url_rule('/login', view_func=login, methods=['GET', 'POST'], strict_slas
 app.add_url_rule('/logout', view_func=logout, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/registry', view_func=registry, methods=['GET', 'POST'], strict_slashes=False)
 app.add_url_rule('/recovery', view_func=recovery, methods=['GET', 'POST'], strict_slashes=False)
+
+app.add_url_rule('/user/remove/<int:id>', view_func=remove_user, methods=['POST'], strict_slashes=False)

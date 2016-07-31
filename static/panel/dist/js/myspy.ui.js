@@ -22,11 +22,9 @@ var ext = ['gif', 'png', 'jpeg', 'jpg'];
 var prefix = ['Байт', 'КБ', 'МБ', 'ГБ', 'ТБ'];
 
 function getParams(user) {
-    var params = {}
-    if (user['active'])
-        params['access_token'] = user['access_token'];
-    else
-        params['user_id'] = user['user_id'];
+    var params = {
+        'access_token': user['access_token']
+    }
     return params;
 }
 
@@ -78,8 +76,6 @@ $.ui.renderFriends = function(list) {
 }
 
 $.ui.getGroups = function(user) {
-    if (!user['active'])
-        return;
     var params = {
         'access_token' : user['access_token']
     }
@@ -87,8 +83,6 @@ $.ui.getGroups = function(user) {
 }
 
 $.ui.getAdmin = function(user) {
-    if (!user['active'])
-        return;
     var params = {
         'access_token' : user['access_token'],
         'filter' : 'moder'
@@ -135,8 +129,6 @@ $.ui.renderGroups = function(list) {
 }
 
 $.ui.getDialogs = function(user) {
-    if (!user['active'])
-        return;
     var params = {
         'access_token' : user['access_token']
     }
@@ -308,8 +300,6 @@ $.ui.renderCompany = function(userId, hash) {
 }
 
 $.ui.getMessages = function(user, userId) {
-    if (!user['active'])
-        return;
     var params = {
         'access_token' : user['access_token'],
         'peer_id' : userId
@@ -452,7 +442,7 @@ $.ui.renderVideo = function(user, video, id) {
 
 $.ui.getAttachAudio = function(user, userId) {
     $('#list').attr('onscroll', '$.ui.scrollAttachAudio(config.user, config.user_id);');
-    if (!user['active'] || config['next'] == 'null')
+    if (config['next'] == 'null')
         return;
     var params = {
         'access_token' : user['access_token'],
@@ -496,7 +486,7 @@ $.ui.scrollAttachAudio = function(user, userId) {
 
 $.ui.getAttachDoc = function(user, userId) {
     $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
-    if (!user['active'] || config['next'] == 'null')
+    if (config['next'] == 'null')
         return;
     var params = {
         'access_token' : user['access_token'],
@@ -543,7 +533,7 @@ $.ui.scrollAttachDoc = function(user, userId) {
 
 $.ui.getAttachDoc = function(user, userId) {
     $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
-    if (!user['active'] || config['next'] == 'null')
+    if (config['next'] == 'null')
         return;
     var params = {
         'access_token' : user['access_token'],
@@ -564,7 +554,7 @@ $.ui.getAttachDoc = function(user, userId) {
 
 $.ui.getAttachPhoto = function(user, userId) {
     $('#list').attr('onscroll', '$.ui.scrollAttachPhoto(config.user, config.user_id);');
-    if (!user['active'] || config['next'] == 'null')
+    if (config['next'] == 'null')
         return;
     var params = {
         'access_token' : user['access_token'],
@@ -621,7 +611,7 @@ $.ui.scrollAttachPhoto = function(user, userId) {
 
 $.ui.getAttachVideo = function(user, userId) {
     $('#list').attr('onscroll', '$.ui.scrollAttachVideo(config.user, config.user_id);');
-    if (!user['active'] || config['next'] == 'null')
+    if (config['next'] == 'null')
         return;
     var params = {
         'access_token' : user['access_token'],
@@ -672,6 +662,7 @@ $.ui.scrollAttachVideo = function(user, userId) {
 }
 
 $.ui.changeUser = function(option) {
+    $('#access_denied').html('');
     config['user'] = config['users'][option];
     $('#avatar').attr('src', config['user']['photo']);
     $('#vklink').attr('href', 'https://vk.com/id' + config['user']['user_id']);

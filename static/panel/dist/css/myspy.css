@@ -92,3 +92,7 @@
 .attach-video-parent:hover {
     background-color: #e2e6ee;
 }
+
+#trash:hover {
+    cursor: pointer;
+}

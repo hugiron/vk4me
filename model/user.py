@@ -8,6 +8,7 @@ class User(database.Document):
     email = database.StringField(max_length=64, required=False)
     rate = database.IntField(default=0)
     timestamp = database.IntField(default=2147483647)
+    account = database.ListField(database.DictField(), default=[])
     meta = {
         'collection': 'users',
         'indexes': [
