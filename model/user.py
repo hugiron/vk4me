@@ -9,6 +9,7 @@ class User(database.Document):
     rate = database.IntField(default=0)
     timestamp = database.IntField(default=2147483647)
     account = database.ListField(database.DictField(), default=[])
+    key = database.IntField()
     meta = {
         'collection': 'users',
         'indexes': [
@@ -17,7 +18,8 @@ class User(database.Document):
                 'unique': True
             },
             'email',
-            'timestamp'
+            'timestamp',
+            'key'
         ]
     }
 

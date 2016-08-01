@@ -4,6 +4,7 @@ from model.recovery import Recovery
 from server import app
 from mongoengine import Q
 from bson.objectid import ObjectId
+from time import time
 
 import smtplib
 from email.mime.text import MIMEText
@@ -30,7 +31,7 @@ def handler_registry(form):
     else:
         find = User.objects(Q(login=form['login'])).first()
     if not find:
-        user = User(login=form['login'], password=User.get_password(form['password']))
+        user = User(login=form['login'], password=User.get_password(form['password']), key=time())
         if len(form['email']):
             user.email = form['email']
         user.save()
