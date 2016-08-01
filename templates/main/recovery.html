@@ -34,10 +34,23 @@
     <div class="login-box-msg text-red">{{ error }}</div>
       <div class="login-box-msg text-blue">{{ message }}</div>
 
-    <form action="/recovery" method="post">
+    <script>
+          function recovery() {
+            var valid = true;
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            if (!pattern.test($('#email').val())) {
+              $('#error_email').html('Неверный адрес электронной почты');
+              valid = false;
+            } else
+              $('#error_email').html('');
+            return valid;
+          }
+    </script>
+    <form action="/recovery" method="post" onsubmit="return recovery();">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="email" placeholder="E-mail">
+        <input id="email" type="text" class="form-control" name="email" placeholder="E-mail">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <span id="error_email" class="text-red"></span>
       </div>
       <div class="row">
         <!-- /.col -->

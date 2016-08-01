@@ -1,67 +1,94 @@
 from flask import render_template, session, request, redirect
 from server import app
-from controller.handler import get_account_list
+from controller.handler import get_account_list, send
 from json import dumps
+
+
+def get_data():
+    return dict(
+        menu=app.config['MENU'],
+        path=request.path,
+        users=dumps(get_account_list(session['user_id'])),
+        rate=session['rate']
+    )
 
 
 def index():
     if 'user_id' not in session:
         return redirect('/login')
-    return render_template('panel/index.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'Главная'
+    return render_template('panel/index.html', **data)
 
 
 def faq():
     if 'user_id' not in session:
         return redirect('/')
-    return render_template('panel/faq.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'FAQ'
+    return render_template('panel/faq.html', **data)
 
 
-def support():
+def feedback():
+    if request.method == 'GET':
+        if 'user_id' not in session:
+            return redirect('/')
+        data = get_data()
+        data['title'] = 'Обратная связь'
+        return render_template('panel/support.html', **data)
+    else:
+        try:
+            if not ('message' in request.form and 'contact' in request.form):
+                raise Exception('Переданы неверные параметры')
+            send(
+                app.config['SMTP_LOGIN'],
+                'Связь с разработчиками',
+                str(render_template('mail/support.html',
+                                    message=request.form['message'],
+                                    contact=request.form['contact']
+                                    )
+                )
+            )
+            return dumps(dict(code=200))
+        except Exception as msg:
+            return dumps(dict(
+                code=400,
+                message=str(msg)
+            ))
+
+
+def payment():
     if 'user_id' not in session:
         return redirect('/')
-    return render_template('panel/support.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'Пополнение счета'
+    return render_template('panel/payment.html', **data)
 
 
 def dialogs_all():
     if 'user_id' not in session:
         return redirect('/')
-    script = """
+    data = get_data()
+    data['title'] = 'Диалоги'
+    data['script'] = """
         $('#dialogs').html('');
         if ('last_id' in config)
             delete config['last_id'];
         config.last_top = 0;
         $.ui.getDialogs(config.user);
     """
-    return render_template('panel/dialog.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    return render_template('panel/dialog.html', **data)
 
 
 def messages_all(id):
     if 'user_id' not in session:
         return redirect('/')
+    data = get_data()
     if not session['rate']:
-        return render_template('panel/access_denied.html',
-                               menu=app.config['MENU'],
-                               path=request.path,
-                               users=dumps(get_account_list(session['user_id']))
-                               )
-    script = """
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    data['title'] = 'Личные сообщения'
+    data['script'] = """
         $('#messages').html('');
         if ('last_id' in config)
             delete config['last_id'];
@@ -69,181 +96,137 @@ def messages_all(id):
         config.last_top = 0;
         $.ui.getMessages(config.user, config.user_id);
     """
-    return render_template('panel/message.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           id=id,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data['id'] = id
+    return render_template('panel/message.html', **data)
 
 
 def messages_all_video(id):
     if 'user_id' not in session:
         return redirect('/')
+    data = get_data()
     if not session['rate']:
-        return render_template('panel/access_denied.html',
-                               menu=app.config['MENU'],
-                               path=request.path,
-                               users=dumps(get_account_list(session['user_id']))
-                               )
-    script = """
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    data['title'] = 'Вложения | Видеозаписи'
+    data['script'] = """
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
         $.ui.getAttachVideo(config.user, config.user_id);
     """
-    return render_template('panel/attachment.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           id=id,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data['id'] = id
+    return render_template('panel/attachment.html', **data)
 
 
 def messages_all_audio(id):
     if 'user_id' not in session:
         return redirect('/')
+    data = get_data()
     if not session['rate']:
-        return render_template('panel/access_denied.html',
-                               menu=app.config['MENU'],
-                               path=request.path,
-                               users=dumps(get_account_list(session['user_id']))
-                               )
-    script = """
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    data['title'] = 'Вложения | Аудиозаписи'
+    data['script'] = """
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
         $.ui.getAttachAudio(config.user, config.user_id);
     """
-    return render_template('panel/attachment.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           id=id,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data['id'] = id
+    return render_template('panel/attachment.html', **data)
 
 
 def messages_all_photo(id):
     if 'user_id' not in session:
         return redirect('/')
+    data = get_data()
     if not session['rate']:
-        return render_template('panel/access_denied.html',
-                               menu=app.config['MENU'],
-                               path=request.path,
-                               users=dumps(get_account_list(session['user_id']))
-                               )
-    script = """
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    data['title'] = 'Вложения | Фотографии'
+    data['script'] = """
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
         $.ui.getAttachPhoto(config.user, config.user_id);
     """
-    return render_template('panel/attachment.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           id=id,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data['id'] = id
+    return render_template('panel/attachment.html', **data)
 
 
 def messages_all_doc(id):
     if 'user_id' not in session:
         return redirect('/')
+    data = get_data()
     if not session['rate']:
-        return render_template('panel/access_denied.html',
-                               menu=app.config['MENU'],
-                               path=request.path,
-                               users=dumps(get_account_list(session['user_id']))
-                               )
-    script = """
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    data['title'] = 'Вложения | Документы'
+    data['script'] = """
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
         $.ui.getAttachDoc(config.user, config.user_id);
     """
-    return render_template('panel/attachment.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           id=id,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data['id'] = id
+    return render_template('panel/attachment.html', **data)
 
 
 def messages_important():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    return render_template('panel/messages/important.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'Важные сообщения'
+    return render_template('panel/messages/important.html', **data)
 
 
 def dialogs_cache():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    return render_template('panel/messages/cache.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'Кэш диалогов'
+    return render_template('panel/messages/cache.html', **data)
 
 
 def groups_all():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    script = """
+    data = get_data()
+    data['title'] = 'Сообщества'
+    data['script'] = """
         $('#list').html('');
         $.ui.getGroups(config.user);
     """
-    return render_template('panel/list.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    return render_template('panel/list.html', **data)
 
 
 def groups_admin():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    script = """
+    data = get_data()
+    data['title'] = 'Администрирование'
+    data['script'] = """
         $('#list').html('');
         $.ui.getAdmin(config.user);
     """
-    return render_template('panel/list.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    return render_template('panel/list.html', **data)
 
 
 def friends_all():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    script = """
+    data = get_data()
+    data['title'] = 'Все друзья'
+    data['script'] = """
         $('#list').html('');
         $.ui.getFriends(config.user);
     """
-    return render_template('panel/list.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           script=script,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    return render_template('panel/list.html', **data)
 
 
 def friends_new():
     if 'user_id' not in session:
         return render_template('main/index.html')
-    return render_template('panel/friends/new.html',
-                           menu=app.config['MENU'],
-                           path=request.path,
-                           users=dumps(get_account_list(session['user_id']))
-                           )
+    data = get_data()
+    data['title'] = 'Новые друзья'
+    return render_template('panel/friends/new.html', **data)

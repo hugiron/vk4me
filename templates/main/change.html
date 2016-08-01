@@ -34,14 +34,32 @@
     <div class="login-box-msg text-red">{{ error }}</div>
       <div class="login-box-msg text-blue">{{ message }}</div>
 
-    <form action="/recovery" method="post">
+    <script>
+          function recovery() {
+            var valid = true;
+            if ($('#password').val().length < 6) {
+              $('#error_password').html('Минимальная длина пароля -  6 символов');
+              valid = false;
+            } else
+              $('#error_password').html('');
+            if ($('#password').val() != $('#rpassword').val()) {
+              $('#error_rpassword').html('Пароли не совпадают');
+              valid = false;
+            } else
+              $('#error_rpassword').html('');
+            return valid;
+          }
+    </script>
+    <form action="/recovery" method="post" onsubmit="return recovery();">
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="password" placeholder="Новый пароль">
+        <input id="password" type="password" class="form-control" name="password" placeholder="Новый пароль">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <span id="error_password" class="text-red"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="rpassword" placeholder="Повторите пароль">
+        <input id="rpassword" type="password" class="form-control" name="rpassword" placeholder="Повторите пароль">
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+        <span id="error_rpassword" class="text-red"></span>
       </div>
       <div class="row">
         <!-- /.col -->

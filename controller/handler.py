@@ -17,6 +17,8 @@ def handler_login(form):
         raise Exception('Неверный логин или пароль')
     session['user_id'] = str(user.id)
     session['rate'] = user.rate
+    session['login'] = user.login
+    session['timestamp'] = user.timestamp
     return redirect('/')
 
 
@@ -80,6 +82,8 @@ def handler_recovery_change(form):
     session.clear()
     session['user_id'] = str(user.id)
     session['rate'] = user.rate
+    session['login'] = user.login
+    session['timestamp'] = user.timestamp
     user.password = User.get_password(form['password'])
     user.save()
     return redirect('/')

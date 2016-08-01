@@ -34,23 +34,54 @@
       <p class="login-box-msg">Уже зарегистрированы? <a href="/"><span>Войти</span></a></p>
     <div class="login-box-msg text-red">{{ error }}</div>
 
-    <form action="/registry" method="post">
+    <script>
+          function registry() {
+            var valid = true;
+            if ($('#login').val().length < 4) {
+              $('#error_login').html('Допустимая длина логина не меньше 4 символов');
+              valid = false;
+            } else
+              $('#error_login').html('');
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            if ($('#email').val().length > 0 && !pattern.test($('#email').val())) {
+              $('#error_email').html('Неверный адрес электронной почты');
+              valid = false;
+            } else
+              $('#error_email').html('');
+            if ($('#password').val().length < 6) {
+              $('#error_password').html('Минимальная длина пароля -  6 символов');
+              valid = false;
+            } else
+              $('#error_password').html('');
+            if ($('#password').val() != $('#rpassword').val()) {
+              $('#error_rpassword').html('Пароли не совпадают');
+              valid = false;
+            } else
+              $('#error_rpassword').html('');
+            return valid;
+          }
+    </script>
+    <form action="/registry" method="post" onsubmit="return registry();">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="login" placeholder="Логин" value="{{ form['login'] }}">
+        <input id="login" type="text" class="form-control" name="login" placeholder="Логин" value="{{ form['login'] }}">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <span id="error_login" class="text-red"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" name="email" placeholder="E-mail" value="{{ form['email'] }}">
+        <input id="email" type="email" class="form-control" name="email" placeholder="E-mail" value="{{ form['email'] }}">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-          <span class="text-gray">* Укажите адрес электронной почты для восстановления пароля</span>
+          <span class="text-gray">* Укажите адрес электронной почты для восстановления пароля</span></br>
+        <span id="error_email" class="text-red"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="password" placeholder="Пароль" value="{{ form['password'] }}">
+        <input id="password" type="password" class="form-control" name="password" placeholder="Пароль" value="{{ form['password'] }}">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <span id="error_password" class="text-red"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="rpassword" placeholder="Повторите пароль" value="{{ form['rpassword'] }}">
+        <input id="rpassword" type="password" class="form-control" name="rpassword" placeholder="Повторите пароль" value="{{ form['rpassword'] }}">
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+        <span id="error_rpassword" class="text-red"></span>
       </div>
       <div class="row" style="padding: 0 15px 0 15px;">
         <!-- /.col -->
@@ -58,7 +89,7 @@
               <a href="/recovery">Забыли пароль?</a>
           </div>
         <div class="pull-right">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Регистрация</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Регистрация</input>
         </div>
         <!-- /.col -->
       </div>

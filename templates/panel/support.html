@@ -1,4 +1,62 @@
 {% extends "panel/base.html" %}
 {% block content %}
-    
+    <div class="content" style="height: 100vh;">
+        <script>
+            function support() {
+                var valid = true;
+                if (!$('#message').val()) {
+                    $('#error_message').html('Введите текст сообщения');
+                    valid = false;
+                } else
+                    $('#error_message').html('');
+                if (!$('#contact').val()) {
+                    $('#error_contact').html('Введите текст сообщения');
+                    valid = false;
+                } else
+                    $('#error_contact').html('');
+                return valid;
+            }
+        </script>
+        <script>
+            function submitMessage() {
+                if (support())
+                    $.ajax({
+                        type: 'POST',
+                        url: '/feedback',
+                        data: {
+                            'message': $('#message').val(),
+                            'contact': $('#contact').val()
+                        },
+                        success: function(data) {
+                            $('#notification').html('Ваше сообщение было получено. Мы ответим на него в ближайнее время :)');
+                            $('#message').val('');
+                            $('#contact').val('');
+                        }
+                    });
+                return false;
+            }
+        </script>
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="top: 20%;">
+            <div style="margin-bottom: 10px; text-align: center;" class="text-out">
+                <h2>Связь с разработчиками</h2>
+                <span>Нашли ошибку? Есть вопросы или предложение по улучшению сервиса?</span></br>
+                <span>Пишите! Мы с радостью рассмотрим и ответим на ваше сообщение.</span></br>
+                <span id="notification" class="text-blue"></span>
+            </div>
+            <form action="/feedback" method="post" onsubmit="return submitMessage();">
+                <textarea id="message" class="form-control" rows="8" style="resize: vertical;" name="message" placeholder="Ваше сообщение"></textarea>
+                <span id="error_message" class="text-red"></span>
+                <div class="row" style="padding-top: 5px;">
+                    <div class="col-md-10" style="padding-right: 0px;">
+                        <input id="contact" type="text" class="form-control" name="contact" placeholder="Куда нам написать ответ? Укажите свой контакт, например почту">
+                        <span id="error_contact" class="text-red"></span>
+                    </div>
+                    <div class="col-md-2" style="padding-left: 5px;">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Отправить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

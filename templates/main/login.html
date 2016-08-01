@@ -33,14 +33,32 @@
   <div class="register-box-body">
     <div class="login-box-msg text-red">{{ error }}</div>
 
-    <form action="/login" method="post">
+    <script>
+          function auth() {
+            var valid = true;
+            if (!$('#login').val().length) {
+              $('#error_login').html('Введите логин');
+              valid = false;
+            } else
+              $('#error_login').html('');
+            if (!$('#password').val().length) {
+              $('#error_password').html('Введите пароль');
+              valid = false;
+            } else
+              $('#error_password').html('');
+            return valid;
+          }
+    </script>
+    <form action="/login" method="post" onsubmit="return auth();">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" name="login" placeholder="Логин" value="{{ form['login'] }}">
+        <input id="login" type="text" class="form-control" name="login" placeholder="Логин" value="{{ form['login'] }}">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <span id="error_login" class="text-red"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="password" placeholder="Пароль" value="{{ form['password'] }}">
+        <input id="password" type="password" class="form-control" name="password" placeholder="Пароль" value="{{ form['password'] }}">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <span id="error_password" class="text-red"></span>
       </div>
       <div class="row">
         <!-- /.col -->
