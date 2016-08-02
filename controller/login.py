@@ -1,6 +1,7 @@
 from flask import session, redirect, request, render_template
 from controller.handler import handler_login, handler_registry, handler_recovery, handler_recovery_confirm, \
     handler_recovery_change
+from model.error import InternalServerError
 
 
 def login():
@@ -28,8 +29,10 @@ def registry():
     elif request.method == 'POST':
         try:
             return handler_registry(request.form)
-        except Exception as msg:
+        except InternalServerError as msg:
             return render_template('main/registry.html', error=str(msg), form=request.form)
+        except Exception:
+            return render_template('main/registry.html', error='Внутренняя ошибка сервера. Попробуйте еще раз.', form=request.form)
 
 
 def recovery():

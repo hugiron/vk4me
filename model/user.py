@@ -19,7 +19,10 @@ class User(database.Document):
             },
             'email',
             'timestamp',
-            'key'
+            {
+                'fields': ['key'],
+                'unique': True
+            }
         ]
     }
 

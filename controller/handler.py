@@ -5,6 +5,7 @@ from server import app
 from mongoengine import Q
 from bson.objectid import ObjectId
 from time import time
+from model.error import InternalServerError
 
 import smtplib
 from email.mime.text import MIMEText
@@ -25,7 +26,7 @@ def handler_login(form):
 
 def handler_registry(form):
     if not ('login' in form and 'password' in form and 'email' in form):
-        raise Exception('Переданы неверные параметры')
+        raise InternalServerError('Переданы неверные параметры')
     if len(form['email']):
         find = User.objects(Q(login=form['login']) | Q(email=form['email'])).first()
     else:
@@ -38,9 +39,9 @@ def handler_registry(form):
         return handler_login(form)
     else:
         if find.login == form['login']:
-            raise Exception('Этот логин уже используется')
+            raise InternalServerError('Этот логин уже используется')
         elif len(form['email']) and find.email == form['email']:
-            raise Exception('Этот e-mail уже используется')
+            raise InternalServerError('Этот e-mail уже используется')
 
 
 def handler_recovery(form):
