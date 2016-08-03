@@ -31,7 +31,7 @@ def registry():
             return handler_registry(request.form)
         except InternalServerError as msg:
             return render_template('main/registry.html', error=str(msg), form=request.form)
-        except Exception:
+        except:
             return render_template('main/registry.html', error='Внутренняя ошибка сервера. Попробуйте еще раз.', form=request.form)
 
 

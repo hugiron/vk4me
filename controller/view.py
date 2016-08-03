@@ -5,10 +5,12 @@ from json import dumps
 
 
 def get_data():
+    users = get_account_list(session['user_id'])
     return dict(
         menu=app.config['MENU'],
         path=request.path,
-        users=dumps(get_account_list(session['user_id'])),
+        users=dumps(users),
+        size=len(users),
         rate=session['rate']
     )
 

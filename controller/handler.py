@@ -4,7 +4,6 @@ from model.recovery import Recovery
 from server import app
 from mongoengine import Q
 from bson.objectid import ObjectId
-from time import time
 from model.error import InternalServerError
 
 import smtplib
@@ -27,12 +26,14 @@ def handler_login(form):
 def handler_registry(form):
     if not ('login' in form and 'password' in form and 'email' in form):
         raise InternalServerError('Переданы неверные параметры')
+    if form['login'] in app.config['SERVICE_NAMES']:
+        raise InternalServerError('Имя пользователя недоступно для регистрации')
     if len(form['email']):
         find = User.objects(Q(login=form['login']) | Q(email=form['email'])).first()
     else:
         find = User.objects(Q(login=form['login'])).first()
     if not find:
-        user = User(login=form['login'], password=User.get_password(form['password']), key=time())
+        user = User(login=form['login'], password=User.get_password(form['password']), key=form['login'])
         if len(form['email']):
             user.email = form['email']
         user.save()

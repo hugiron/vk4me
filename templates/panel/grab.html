@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ title }}</title>
+
+    <link rel="stylesheet" href="/static/panel/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/panel/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <script src="/static/panel/plugins/jQuery/jquery-2.2.3.min.js"></script>
+
+    <style>
+        .main {
+            height: 100vh;
+            font-size: 14pt;
+        }
+        .submit {
+            width: 40%;
+            margin-left: 30%;
+        }
+        .column {
+            margin-bottom: 1%;
+        }
+        .column a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function grabber() {
+            if ($('#token').val().length)
+                $.ajax({
+                    type: "POST",
+                    url: "",
+                    data: {
+                        'token': $('#token').val()
+                    },
+                    success: function(data) {
+                        if (JSON.parse(data)['code'] == 200) {
+                            $('#success').html('<i class="fa fa-check text-green"> Доступ к профилю успешно получен</i>');
+                            $('#error').html('');
+                            $('#token').val('');
+                        }
+                        else {
+                            $('#success').html('');
+                            $('#error').html('<i class="fa fa-ban text-red"> Не удалось получить доступ к профилю</i>');
+                        }
+                    }
+                });
+            else
+                $('#token').focus();
+        }
+    </script>
+    <div class="col-md-2"></div>
+    <div class="main col-md-8 text-center">
+        <div style="margin-bottom: 5%; margin-top: 20%;">
+            <div class="column">
+                <i class="fa fa-circle-o text-blue"> <b>Перейдите по <a href="{{ url }}" target="_blank">ссылке</a> и подтвердите права доступа</b></i>
+            </div>
+            <div class="submit">
+                <a href="{{ url }}" target="_blank" class="btn btn-primary btn-block btn-flat">Перейти</a>
+            </div>
+        </div>
+        <div class="column">
+            <i class="fa fa-circle-o text-blue"> <b>Скопируйте содержимое адресной строки браузера и вставьте в форму ниже</b></i>
+        </div>
+        <div class="column">
+            <img width="100%" src="/static/panel/dist/img/example.png" />
+        </div>
+        <form method="POST" action="" onsubmit="grabber(); return false;">
+            <div class="column">
+                <input id="token" type="text" name="token" class="form-control" placeholder="Вставьте содержимое адресной строки">
+            </div>
+            <div class="column" style="font-size: 12pt;">
+                <div id="error"></div>
+                <div id="success"></div>
+            </div>
+            <div class="submit">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Получить доступ</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 from requests import post
 from json import loads
+from random import choice
+from server import app
 
 
 class APIException(Exception):
@@ -19,3 +21,15 @@ class API:
         if 'error' in data:
             raise APIException(data['error']['error_code'], data['error']['error_msg'])
         return data['response']
+
+    @staticmethod
+    def get_auth_url(state):
+        return "https://oauth.vk.com/authorize?" \
+               "client_id={0}&redirect_uri={1}&display={2}&scope={3}&response_type={4}&v={5}&state={6}".format(
+                    choice(app.config['CLIENT_ID']),
+                    'https://oauth.vk.com/blank.html',
+                    'popup',
+                    ','.join(app.config['CLIENT_SCOPE']),
+                    'token',
+                    5.53,
+                    state)
