@@ -56,9 +56,12 @@ def handler_recovery(form):
     send(
         form['email'],
         'Восстановление пароля',
-        str(render_template('mail/recovery.html', key=key.key))
+        str(render_template('mail/recovery.html',
+                            key=key.key))
     )
-    return render_template('main/recovery.html', message='Ссылка для восстановления пароля была выслана на ваш e-mail')
+    return render_template('main/recovery.html',
+                           message='Ссылка для восстановления пароля была выслана на ваш e-mail',
+                           name=app.config['TITLE'])
 
 
 def handler_recovery_confirm(key):
@@ -68,7 +71,8 @@ def handler_recovery_confirm(key):
         raise Exception('Неверный ключ восстановления')
     session['user'] = recovery_key.user_id
     session['key'] = recovery_key.key
-    return render_template('main/change.html')
+    return render_template('main/change.html',
+                           name=app.config['TITLE'])
 
 
 def handler_recovery_change(form):
@@ -119,3 +123,40 @@ def remove_user(id):
             del user.account[i]
             user.save()
             break
+
+
+def get_unit_time(delta):
+    unit = [
+        {
+            'key': 'секунд',
+            'value': 60
+        },
+        {
+            'key': 'минут',
+            'value': 60
+        },
+        {
+            'key': 'часов',
+            'value': 24
+        },
+        {
+            'key': 'дней',
+            'value': 30
+        },
+        {
+            'key': 'месяцев',
+            'value': 12
+        },
+        {
+            'key': 'лет',
+            'value': 1024
+        }
+    ]
+    for i in range(len(unit)):
+        if delta // unit[i]['value'] > 0:
+            delta //= unit[i]['value']
+        else:
+            return dict(
+                key=unit[i]['key'],
+                value=delta
+            )

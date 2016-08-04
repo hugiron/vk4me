@@ -1,17 +1,22 @@
 from flask import render_template, session, request, redirect
 from server import app
-from controller.handler import get_account_list, send
+from controller.handler import get_account_list, send, get_unit_time
 from json import dumps
+from time import time
 
 
 def get_data():
     users = get_account_list(session['user_id'])
+    unit = get_unit_time(session['timestamp'] - time())
     return dict(
         menu=app.config['MENU'],
         path=request.path,
         users=dumps(users),
         size=len(users),
-        rate=session['rate']
+        rate=session['rate'],
+        unit=unit['key'],
+        time=int(unit['value']),
+        name=app.config['TITLE']
     )
 
 
