@@ -26,6 +26,7 @@ class User(database.Document):
         ]
     }
 
+
     @staticmethod
     def get_password(password):
         return sha256(password.encode()).hexdigest()

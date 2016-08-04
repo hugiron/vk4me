@@ -5,6 +5,7 @@ from server import app
 from mongoengine import Q
 from bson.objectid import ObjectId
 from model.error import InternalServerError
+from model.session import Session
 
 import smtplib
 from email.mime.text import MIMEText
@@ -96,6 +97,28 @@ def handler_recovery_change(form):
     user.password = User.get_password(form['password'])
     user.save()
     return redirect('/')
+
+
+def activate_user(admin, username, time):
+    user = User.objects(login=username).first()
+    user.rate = 1
+    user.timestamp = int(time()) + int(time)
+    user.save()
+    Session.objects(data__login=user.login).update(**dict(
+        data__timestamp=user.timestamp,
+        data__rate=user.rate
+    ))
+    if app.config['SEND_ACTIVATE']:
+        unit = get_unit_time(time)
+        send(
+            app.config['SMTP_LOGIN'],
+            'Активация профиля на {0}'.format(app.config['TITLE']),
+            str(render_template('mail/activate.html',
+                                admin=admin,
+                                username=username,
+                                unit=unit['key'],
+                                time=unit['value']))
+        )
 
 
 def send(email, subject, body):

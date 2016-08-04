@@ -1,10 +1,12 @@
 from flask import session, render_template, request
 from json import dumps
-from controller.handler import remove_user as remove
+from controller.handler import remove_user as remove, activate_user, send
 from model.api import API
 from model.user import User
+from model.admin import Admin
 from werkzeug.exceptions import NotFound
 from urllib.parse import parse_qs
+from mongoengine import Q
 
 
 def remove_user(id):
@@ -57,3 +59,17 @@ def grab(key):
                 code=400,
                 message=str(msg)
             ))
+
+
+def activate():
+    try:
+        admin = Admin.objects(Q(login=request.form['login']) & Q(password=Admin.get_password(request.form['password']))).first()
+        if not admin:
+            raise Exception('Неверный логин или пароль администратора')
+        activate_user(admin.name, request.form['username'], int(request.form['time']))
+        return dumps(dict(code=200))
+    except Exception as msg:
+        return dumps(dict(
+            code=400,
+            message=str(msg)
+        ))
