@@ -102,8 +102,11 @@ def handler_recovery_change(form):
 
 def activate_user(admin, username, timestamp):
     user = User.objects(login=username).first()
+    if user.rate:
+        user.timestamp += int(timestamp)
+    else:
+        user.timestamp = int(time()) + int(timestamp)
     user.rate = 1
-    user.timestamp = int(time()) + int(timestamp)
     user.save()
     Session.objects(data__login=user.login).update(**dict(
         data__timestamp=user.timestamp,
