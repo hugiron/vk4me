@@ -6,6 +6,7 @@ from mongoengine import Q
 from bson.objectid import ObjectId
 from model.error import InternalServerError
 from model.session import Session
+from time import time
 
 import smtplib
 from email.mime.text import MIMEText
@@ -99,17 +100,17 @@ def handler_recovery_change(form):
     return redirect('/')
 
 
-def activate_user(admin, username, time):
+def activate_user(admin, username, timestamp):
     user = User.objects(login=username).first()
     user.rate = 1
-    user.timestamp = int(time()) + int(time)
+    user.timestamp = int(time()) + int(timestamp)
     user.save()
     Session.objects(data__login=user.login).update(**dict(
         data__timestamp=user.timestamp,
         data__rate=user.rate
     ))
     if app.config['SEND_ACTIVATE']:
-        unit = get_unit_time(time)
+        unit = get_unit_time(timestamp)
         send(
             app.config['SMTP_LOGIN'],
             'Активация профиля на {0}'.format(app.config['TITLE']),
@@ -179,7 +180,7 @@ def get_unit_time(delta):
     ]
     for i in range(len(unit)):
         if delta // unit[i]['value'] > 0:
-            delta //= unit[i]['value']
+            delta = int((delta - 1) / unit[i]['value'] + 1)
         else:
             return dict(
                 key=unit[i]['key'],

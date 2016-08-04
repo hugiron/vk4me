@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора | Активация профилей</title>
+    <script src="/static/panel/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script>
+        function activate() {
+            if ($('#login').val().length && $('#password').val().length && $('#username').val().length && $('#time').val().length) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8081/activate",
+                    data: {
+                        'login': $('#login').val(),
+                        'password': $('#password').val(),
+                        'username': $('#username').val(),
+                        'time': parseInt($('#time').val()) * 24 * 60 * 60
+                    },
+                    success: function(data) {
+                        var data = JSON.parse(data);
+                        if (data['code'] == 200) {
+                            alert('Доступ пользователю успешно продлен');
+                            location.reload();
+                        } else {
+                            alert(data['message']);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <form onsubmit="activate(); return false;">
+        <input type="text" id="login" placeholder="Логин администратора"></br>
+        <input type="text" id="password" placeholder="Пароль администратора"></br>
+        <input type="text" id="username" placeholder="Имя пользователя"></br>
+        <input type="text" id="time" placeholder="Дней будет добавлено"></br>
+        <button type="submit" value="Продлить доступ">Продлить доступ</button>
+    </form>
+</body>
+</html>
