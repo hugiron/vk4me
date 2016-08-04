@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <script src="/static/panel/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/master/dist/clipboard.min.js"></script>
 
     <style>
         .main {
@@ -25,6 +26,9 @@
         }
         .column a:hover {
             text-decoration: underline;
+        }
+        .submit-button {
+            width: 25%;
         }
     </style>
 </head>
@@ -56,12 +60,17 @@
     </script>
     <div class="col-md-2"></div>
     <div class="main col-md-8 text-center">
-        <div style="margin-bottom: 5%; margin-top: 20%;">
+        <div style="margin-bottom: 5%; margin-top: 15%;">
             <div class="column">
                 <i class="fa fa-circle-o text-blue"> <b>Перейдите по <a href="{{ url }}" target="_blank">ссылке</a> и подтвердите права доступа</b></i>
             </div>
-            <div class="submit">
-                <a href="{{ url }}" target="_blank" class="btn btn-primary btn-block btn-flat">Перейти</a>
+            <div class="column">
+                <input id="grab" onclick="$('#grab').select();" type="text" class="form-control" value="{{ url }}" readonly>
+            </div>
+            <div class="row column">
+                <a href="{{ url }}" target="_blank" class="btn btn-primary btn-flat submit-button pull-left" style="margin-left: 20%;">Перейти</a>
+                или
+                <button onclick="$('#grab').select(); document.execCommand('copy');" class="btn btn-primary btn-flat submit-button pull-right" style="margin-right: 20%;">Копировать ссылку</button>
             </div>
         </div>
         <div class="column">

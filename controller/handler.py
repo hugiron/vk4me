@@ -16,6 +16,8 @@ def handler_login(form):
     user = User.objects(Q(login=form['login']) & Q(password=User.get_password(form['password']))).first()
     if not user:
         raise Exception('Неверный логин или пароль')
+    if 'remember' in form:
+        session.permanent = bool(form['remember'])
     session['user_id'] = str(user.id)
     session['rate'] = user.rate
     session['login'] = user.login

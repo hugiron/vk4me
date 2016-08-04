@@ -181,7 +181,7 @@ def messages_all_doc(id):
 
 def messages_important():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Важные сообщения'
     return render_template('panel/messages/important.html', **data)
@@ -189,7 +189,7 @@ def messages_important():
 
 def dialogs_cache():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Кэш диалогов'
     return render_template('panel/messages/cache.html', **data)
@@ -197,7 +197,7 @@ def dialogs_cache():
 
 def groups_all():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Сообщества'
     data['script'] = """
@@ -209,7 +209,7 @@ def groups_all():
 
 def groups_admin():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Администрирование'
     data['script'] = """
@@ -221,7 +221,7 @@ def groups_admin():
 
 def friends_all():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Все друзья'
     data['script'] = """
@@ -233,7 +233,7 @@ def friends_all():
 
 def friends_new():
     if 'user_id' not in session:
-        return render_template('main/index.html')
+        return redirect('/')
     data = get_data()
     data['title'] = 'Новые друзья'
     return render_template('panel/friends/new.html', **data)
