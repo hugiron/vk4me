@@ -7,6 +7,7 @@ from bson.objectid import ObjectId
 from model.error import InternalServerError
 from model.session import Session
 from time import time
+from datetime import datetime
 
 import smtplib
 from email.mime.text import MIMEText
@@ -131,7 +132,8 @@ def activate_user(admin, username, timestamp):
                                 admin=admin,
                                 username=username,
                                 unit=unit['key'],
-                                time=unit['value']))
+                                time=unit['value'],
+                                date=datetime.fromtimestamp(int(time())).strftime('%Y-%m-%d %H:%M:%S')))
         )
 
 
