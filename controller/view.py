@@ -28,6 +28,14 @@ def index():
     return render_template('panel/index.html', **data)
 
 
+def access_denied():
+    if 'rate' in session and not session['rate']:
+        data = get_data()
+        data['title'] = 'Доступ запрещен'
+        return render_template('panel/access_denied.html', **data)
+    return redirect('/')
+
+
 def faq():
     if 'user_id' not in session:
         return redirect('/')
@@ -92,8 +100,7 @@ def messages_all(id):
         return redirect('/')
     data = get_data()
     if not session['rate']:
-        data['title'] = 'Доступ запрещен'
-        return render_template('panel/access_denied.html', **data)
+        return redirect('/access_denied')
     data['title'] = 'Личные сообщения'
     data['script'] = """
         $('#messages').html('');
@@ -112,8 +119,7 @@ def messages_all_video(id):
         return redirect('/')
     data = get_data()
     if not session['rate']:
-        data['title'] = 'Доступ запрещен'
-        return render_template('panel/access_denied.html', **data)
+        return redirect('/access_denied')
     data['title'] = 'Вложения | Видеозаписи'
     data['script'] = """
         $('#list').html('');
@@ -130,8 +136,7 @@ def messages_all_audio(id):
         return redirect('/')
     data = get_data()
     if not session['rate']:
-        data['title'] = 'Доступ запрещен'
-        return render_template('panel/access_denied.html', **data)
+        return redirect('/access_denied')
     data['title'] = 'Вложения | Аудиозаписи'
     data['script'] = """
         $('#list').html('');
@@ -148,8 +153,7 @@ def messages_all_photo(id):
         return redirect('/')
     data = get_data()
     if not session['rate']:
-        data['title'] = 'Доступ запрещен'
-        return render_template('panel/access_denied.html', **data)
+        return redirect('/access_denied')
     data['title'] = 'Вложения | Фотографии'
     data['script'] = """
         $('#list').html('');
@@ -166,8 +170,7 @@ def messages_all_doc(id):
         return redirect('/')
     data = get_data()
     if not session['rate']:
-        data['title'] = 'Доступ запрещен'
-        return render_template('panel/access_denied.html', **data)
+        return redirect('/access_denied')
     data['title'] = 'Вложения | Документы'
     data['script'] = """
         $('#list').html('');
