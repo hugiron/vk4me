@@ -2,8 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>Восстановление пароля</title>
 </head>
 <body>
-<a href="http://localhost:5000/recovery?key={{ key }}">Восстановить пароль</a>
+    <span>Добрый день!</span>
+    </br>
+    </br>
+    <span>Вы хотели изменить свой пароль от <b>{{ title }}</b>.</span>
+    </br>
+    <span>Для этого вам придется перейти на сайт и ввести там новый пароль:</span>
+    </br>
+    <a href="{{ host }}/recovery?key={{ key }}">Перейти на сайт</a></br>
+    </br>
+    <span>Если вы не собирались менять пароль, просто удалите это письмо.</span>
 </body>
 </html>

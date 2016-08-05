@@ -3,6 +3,7 @@ from server import app
 from controller.view import *
 from controller.login import *
 from controller.system import *
+from controller.activate import *
 
 app.add_url_rule('/', view_func=index, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/faq', view_func=faq, methods=['GET'], strict_slashes=False)
@@ -31,4 +32,6 @@ app.add_url_rule('/recovery', view_func=recovery, methods=['GET', 'POST'], stric
 
 app.add_url_rule('/user/remove/<int:id>', view_func=remove_user, methods=['POST'], strict_slashes=False)
 app.add_url_rule('/<string:key>', view_func=grab, methods=['GET', 'POST'], strict_slashes=False)
-app.add_url_rule('/activate', view_func=activate, methods=['GET', 'POST'], strict_slashes=False)
+
+app.add_url_rule('/enable', view_func=enable, methods=['GET', 'POST'], strict_slashes=False)
+app.add_url_rule('/disable', view_func=disable, methods=['POST'], strict_slashes=False)

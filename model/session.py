@@ -5,7 +5,6 @@ class Session(database.DynamicDocument):
     meta = {
         'collection': 'session',
         'indexes': [
-            'data.login',
-            'data.timestamp'
+            'data.login'
         ]
     }

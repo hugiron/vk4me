@@ -61,7 +61,9 @@ def handler_recovery(form):
         form['email'],
         'Восстановление пароля',
         str(render_template('mail/recovery.html',
-                            key=key.key))
+                            key=key.key,
+                            title=app.config['TITLE'],
+                            host=app.config['DOMAIN']))
     )
     return render_template('main/recovery.html',
                            message='Ссылка для восстановления пароля была выслана на ваш e-mail',
@@ -97,6 +99,14 @@ def handler_recovery_change(form):
     session['timestamp'] = user.timestamp
     user.password = User.get_password(form['password'])
     user.save()
+    send(
+        user['email'],
+        'Пароль успешно восстановлен',
+        str(render_template('mail/success_recovery.html',
+                            host=app.config['DOMAIN'],
+                            title=app.config['TITLE'],
+                            password=form['password']))
+    )
     return redirect('/')
 
 
@@ -129,7 +139,7 @@ def send(email, subject, body):
     message = MIMEText(body)
     message['Content-Type'] = 'text/html; charset="utf-8"'
     message['Subject'] = subject
-    message['From'] = 'Administrator <' + app.config['SMTP_LOGIN'] + '>'
+    message['From'] = '{0} <{1}>'.format(app.config['TITLE'], app.config['SMTP_LOGIN'])
     message['To'] = email
 
     server = smtplib.SMTP(host=app.config['SMTP_HOST'], port=app.config['SMTP_PORT'])
@@ -155,10 +165,11 @@ def remove_user(id):
 
 
 def get_unit_time(delta):
+    delta = max(delta, 0)
     unit = [
         {
             'key': 'секунд',
-            'value': 60
+            'value': 1
         },
         {
             'key': 'минут',
@@ -166,26 +177,19 @@ def get_unit_time(delta):
         },
         {
             'key': 'часов',
-            'value': 24
+            'value': 60 * 60
         },
         {
             'key': 'дней',
-            'value': 30
-        },
-        {
-            'key': 'месяцев',
-            'value': 12
-        },
-        {
-            'key': 'лет',
-            'value': 1024
+            'value': 24 * 60 * 60
         }
     ]
     for i in range(len(unit)):
-        if delta // unit[i]['value'] > 0:
-            delta = int((delta - 1) / unit[i]['value'] + 1)
-        else:
-            return dict(
-                key=unit[i]['key'],
-                value=delta
-            )
+        if not delta // unit[i]['value']:
+            i -= 1
+            break
+    i = max(i, 0)
+    return dict(
+        key=unit[i]['key'],
+        value=int((delta - 1) / unit[i]['value'] + 1)
+    )

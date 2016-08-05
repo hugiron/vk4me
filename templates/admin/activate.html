@@ -8,7 +8,7 @@
             if ($('#login').val().length && $('#password').val().length && $('#username').val().length && $('#time').val().length) {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:8081/activate",
+                    url: "{{ host }}/enable",
                     data: {
                         'login': $('#login').val(),
                         'password': $('#password').val(),
