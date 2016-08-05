@@ -5,7 +5,7 @@ from datetime import timedelta
 
 # Flask init
 app = Flask(__name__)
-app.config.from_pyfile('./config.cfg')
+app.config.from_pyfile('./server.cfg')
 
 # Connection to database init
 database = MongoEngine(app)

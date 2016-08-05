@@ -351,7 +351,7 @@ $.ui.renderMessages = function(list, depth, parent) {
                     <span class="name" id="name_' + lastId + '"> \
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + date + '</small> \
                     </span> \
-                    ' + list[i]['body'] + ' \
+                    ' + list[i]['body'].replace(/\n/g, "<br/>") + ' \
                     ' + attachments + ' \
                 </p> \
             </div> \

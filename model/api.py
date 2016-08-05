@@ -25,7 +25,7 @@ class API:
     @staticmethod
     def get_auth_url(state):
         return "https://oauth.vk.com/authorize?" \
-               "client_id={0}&redirect_uri={1}&display={2}&scope={3}&response_type={4}&v={5}&state={6}".format(
+               "client_id={0}&redirect_uri={1}&display={2}&scope={3}&response_type={4}&state={6}".format(
                     choice(app.config['CLIENT_ID']),
                     'https://oauth.vk.com/blank.html',
                     'popup',
