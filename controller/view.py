@@ -49,11 +49,11 @@ def feedback():
                 raise Exception('Переданы неверные параметры')
             send(
                 app.config['SMTP_LOGIN'],
-                'Связь с разработчиками',
+                'Связь с разработчиками {0}'.format(app.config['TITLE']),
                 str(render_template('mail/support.html',
                                     message=request.form['message'],
-                                    contact=request.form['contact']
-                                    )
+                                    contact=request.form['contact'],
+                                    username=session['login'] if 'login' in session else None)
                 )
             )
             return dumps(dict(code=200))

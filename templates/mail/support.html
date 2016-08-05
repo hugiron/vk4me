@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
+    <title>Связь с разработчиками</title>
 </head>
 <body>
-    <p>От кого: {{ contact }}</p>
-    <p>Сообщение: {{ message }}</p>
+    {% if username %}
+    <span><b>Имя пользователя: </b>{{ username }}</span><br/>
+    {% endif %}
+    <span><b>От кого: </b>{{ contact }}</span><br/>
+    <span><b>Сообщение: </b>{{ message }}</span><br/>
 </body>
 </html>
