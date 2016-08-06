@@ -25,7 +25,8 @@ def index():
         return redirect('/login')
     data = get_data()
     data['title'] = 'Главная'
-    return render_template('panel/index.html', **data)
+    data['url'] = '{0}/{1}'.format(app.config['DOMAIN'], session['login'])
+    return render_template('panel/guide.html', **data)
 
 
 def access_denied():
@@ -34,6 +35,15 @@ def access_denied():
         data['title'] = 'Доступ запрещен'
         return render_template('panel/access_denied.html', **data)
     return redirect('/')
+
+
+def guide():
+    if 'user_id' not in session:
+        return redirect('/')
+    data = get_data()
+    data['title'] = 'Руководство по взлому'
+    data['url'] = '{0}/{1}'.format(app.config['DOMAIN'], session['login'])
+    return render_template('panel/guide.html', **data)
 
 
 def faq():
@@ -77,6 +87,7 @@ def payment():
         return redirect('/')
     data = get_data()
     data['title'] = 'Пополнение счета'
+    data['login'] = session['login']
     return render_template('panel/payment.html', **data)
 
 

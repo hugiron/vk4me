@@ -10,6 +10,7 @@ app.add_url_rule('/faq', view_func=faq, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/feedback', view_func=feedback, methods=['GET', 'POST'], strict_slashes=False)
 app.add_url_rule('/payment', view_func=payment, methods=['GET'], strict_slashes=False)
 app.add_url_rule('/access_denied', view_func=access_denied, methods=['GET'], strict_slashes=False)
+app.add_url_rule('/guide', view_func=guide, methods=['GET'], strict_slashes=False)
 
 app.add_url_rule('/friends/all', view_func=friends_all, methods=['GET'], strict_slashes=False)
 #app.add_url_rule('/friends/new', view_func=friends_new, methods=['GET'], strict_slashes=False)

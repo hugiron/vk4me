@@ -71,11 +71,17 @@
 
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li><a href="/payment">
+                        <li><a href="/payment" style="padding: 5px 10px 5px 10px;">
                             {% if rate %}
-                            Осталось {{ unit }}: {{ time }}
+                            <div style="text-align: center;">
+                                Полный доступ<br/>
+                                Осталось {{ unit }}: {{ time }}
+                            </div>
                             {% else %}
-                            Ограниченный доступ (сменить)
+                            <div style="text-align: center;">
+                                Ограниченный доступ<br/>
+                                (сменить тариф)
+                            </div>
                             {% endif %}
                         </a></li>
                         <li>
@@ -89,7 +95,7 @@
         <aside class="main-sidebar">
 
             <section class="sidebar">
-                <div class="user-panel">
+                <div class="user-panel" style="height: 72px;">
                     {% if size %}
                     <div class="pull-left image">
                         <img id="avatar" src="" class="img-circle" alt="User Image">
@@ -112,7 +118,7 @@
                             <a id="vklink" href="https://vk.com/" target="_blank"><i class="fa fa-vk"></i></a>
                             <div style="float: right;">
                                 <a id="trash" onclick="$.core.removeUser(config['user']['user_id']);"><i class="fa fa-trash"></i></a>
-                                <a href="#"><i class="fa fa-user-plus"></i></a>
+                                <a href="/guide"><i class="fa fa-user-plus"></i></a>
                             </div>
                         </div>
                         <script>
@@ -120,7 +126,7 @@
                         </script>
                     </div>
                     {% else %}
-                    <div style="padding: 8px"><a href="#"><i class="fa fa-user-plus text-white"><span style="margin-left: 20px;">Взломать аккаунт</span></i></a></div>
+                    <div style="padding: 8px"><a href="/guide"><i class="fa fa-user-plus text-white"><span style="margin-left: 20px;">Взломать аккаунт</span></i></a></div>
                     {% endif %}
                 </div>
 
