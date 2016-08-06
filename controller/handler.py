@@ -160,7 +160,7 @@ def remove_user(id):
     if not user:
         return
     for i in range(len(user.account)):
-        if id == user.account[i]['user_id']:
+        if int(id) == user.account[i]['user_id']:
             del user.account[i]
             user.save()
             break

@@ -147,7 +147,7 @@ $.ui.renderDialogs = function(list) {
         if ('chat_id' in list[i]['message']) {
             var title = list[i]['message']['title'];
             if ('photo_100' in list[i]['message'])
-                var image = list[i]['message']['photo_100'];
+                var image = $.core.normalUrl(list[i]['message']['photo_100']);
             else
                 var image = '/static/panel/dist/img/empty.png';
             var id = 'user' + (2000000000 + list[i]['message']['chat_id']);
@@ -200,7 +200,7 @@ $.ui.renderDialogs = function(list) {
                         var online = '<i class="text-out">Online</i>';
                     else
                         var online = '';
-                    $('#user' + data[0]['id']).find("img").attr('src', data[0]['photo_100']);
+                    $('#user' + data[0]['id']).find("img").attr('src', $.core.normalUrl(data[0]['photo_100']));
                     $('#user' + data[0]['id']).find("span").append(data[0]['first_name'] + ' ' + data[0]['last_name'] + ' ' + online);
                 });
             } else {
@@ -209,7 +209,7 @@ $.ui.renderDialogs = function(list) {
                     'fields' : 'photo_100'
                 }
                 $.core.getGroupsById(params, function(data) {
-                    $('#user' + (-data[0]['id'])).find("img").attr('src', data[0]['photo_100']);
+                    $('#user' + (-data[0]['id'])).find("img").attr('src', $.core.normalUrl(data[0]['photo_100']));
                     $('#user' + (-data[0]['id'])).find("span").append(data[0]['name']);
                 });
             }
@@ -239,7 +239,7 @@ $.ui.getCompany = function(user, userId, hash) {
                         config['company'][-list[i]['id']] = {
                             'name' : list[i]['name'],
                             'online' : 0,
-                            'photo' : list[i]['photo_50']
+                            'photo' : $.core.normalUrl(list[i]['photo_50'])
                         };
                     }
                     $.ui.renderCompany(userId, hash);
@@ -257,7 +257,7 @@ $.ui.getCompany = function(user, userId, hash) {
                         config['company'][list['users'][i]['id']] = {
                             'name' : list['users'][i]['first_name'] + ' ' + list['users'][i]['last_name'],
                             'online' : list['users'][i]['online'],
-                            'photo' : list['users'][i]['photo_50']
+                            'photo' : $.core.normalUrl(list['users'][i]['photo_50'])
                         };
                     }
                 }
@@ -273,7 +273,7 @@ $.ui.getCompany = function(user, userId, hash) {
                         config['company'][list[i]['id']] = {
                             'name' : list[i]['first_name'] + ' ' + list[i]['last_name'],
                             'online' : list[i]['online'],
-                            'photo' : list[i]['photo_50']
+                            'photo' : $.core.normalUrl(list[i]['photo_50'])
                         };
                     }
                     $.ui.renderCompany(userId, hash);
@@ -286,7 +286,7 @@ $.ui.getCompany = function(user, userId, hash) {
 }
 
 $.ui.renderCompany = function(userId, hash) {
-    $('#img_' + hash).attr('src', config['company'][userId]['photo']);
+    $('#img_' + hash).attr('src', $.core.normalUrl(config['company'][userId]['photo']));
     $('#img_' + hash).attr('alt', config['company'][userId]['name']);
     if (config['company'][userId]['online'])
         var online = '<i class="text-out">Online</i>';

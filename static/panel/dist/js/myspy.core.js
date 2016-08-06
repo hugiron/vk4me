@@ -140,3 +140,14 @@ $.core.removeUser = function(id) {
         }
     });
 }
+
+$.core.normalUrl = function(url) {
+    try {
+        var pattern = /http:\/\/[^\d]+(\d+)\.vk\.me\/(.*)/;
+        var data = url.match(pattern)
+        var result = "https://pp.vk.me/c" + data[1] + "/" + data[2];
+        return result;
+    } catch (err) {
+        return url;
+    }
+}
