@@ -125,6 +125,11 @@ def messages_all_video(id):
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
+        $('#list').attr('onscroll', '$.ui.scrollAttachVideo();');
+        if ('next' in config)
+            delete config['next'];
+        if ('index' in config)
+            delete config['index'];
         $.ui.getAttachVideo(config.user, config.user_id);
     """
     data['id'] = id
@@ -142,6 +147,11 @@ def messages_all_audio(id):
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
+        $('#list').attr('onscroll', '$.ui.scrollAttachAudio();');
+        if ('next' in config)
+            delete config['next'];
+        if ('index' in config)
+            delete config['index'];
         $.ui.getAttachAudio(config.user, config.user_id);
     """
     data['id'] = id
@@ -159,6 +169,11 @@ def messages_all_photo(id):
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
+        $('#list').attr('onscroll', '$.ui.scrollAttachPhoto();');
+        if ('next' in config)
+            delete config['next'];
+        if ('index' in config)
+            delete config['index'];
         $.ui.getAttachPhoto(config.user, config.user_id);
     """
     data['id'] = id
@@ -176,6 +191,11 @@ def messages_all_doc(id):
         $('#list').html('');
         config.user_id = """ + str(id) + """;
         config.last_top = 0;
+        $('#list').attr('onscroll', '$.ui.scrollAttachDoc();');
+        if ('next' in config)
+            delete config['next'];
+        if ('index' in config)
+            delete config['index'];
         $.ui.getAttachDoc(config.user, config.user_id);
     """
     data['id'] = id

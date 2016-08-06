@@ -441,7 +441,6 @@ $.ui.renderVideo = function(user, video, id) {
 }
 
 $.ui.getAttachAudio = function(user, userId) {
-    $('#list').attr('onscroll', '$.ui.scrollAttachAudio(config.user, config.user_id);');
     if (config['next'] == 'null')
         return;
     var params = {
@@ -477,15 +476,14 @@ $.ui.renderAttachAudio = function(list) {
     }
 }
 
-$.ui.scrollAttachAudio = function(user, userId) {
+$.ui.scrollAttachAudio = function() {
     if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
-        $.ui.getAttachAudio(user, userId);
+        $.ui.getAttachAudio(config['user'], config['user_id']);
         config.last_top = $('#list').scrollTop();
     }
 }
 
 $.ui.getAttachDoc = function(user, userId) {
-    $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
     if (config['next'] == 'null')
         return;
     var params = {
@@ -524,36 +522,14 @@ $.ui.renderAttachDoc = function(list) {
     }
 }
 
-$.ui.scrollAttachDoc = function(user, userId) {
+$.ui.scrollAttachDoc = function() {
     if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
-        $.ui.getAttachDoc(user, userId);
+        $.ui.getAttachDoc(config['user'], config['user_id']);
         config.last_top = $('#list').scrollTop();
     }
 }
 
-$.ui.getAttachDoc = function(user, userId) {
-    $('#list').attr('onscroll', '$.ui.scrollAttachDoc(config.user, config.user_id);');
-    if (config['next'] == 'null')
-        return;
-    var params = {
-        'access_token' : user['access_token'],
-        'peer_id' : userId,
-        'media_type' : 'doc',
-        'count' : 200
-    }
-    if ('next' in config)
-        params['start_from'] = config['next'];
-    $.core.getMessagesAttachments(params, function(data) {
-        if ('next_from' in data)
-            config['next'] = data['next_from'];
-        else
-            config['next'] = 'null';
-        $.ui.renderAttachDoc(data['items']);
-    });
-}
-
 $.ui.getAttachPhoto = function(user, userId) {
-    $('#list').attr('onscroll', '$.ui.scrollAttachPhoto(config.user, config.user_id);');
     if (config['next'] == 'null')
         return;
     var params = {
@@ -602,15 +578,14 @@ $.ui.renderAttachPhoto = function(list) {
     });
 }
 
-$.ui.scrollAttachPhoto = function(user, userId) {
+$.ui.scrollAttachPhoto = function() {
     if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
-        $.ui.getAttachPhoto(user, userId);
+        $.ui.getAttachPhoto(config['user'], config['user_id']);
         config.last_top = $('#list').scrollTop();
     }
 }
 
 $.ui.getAttachVideo = function(user, userId) {
-    $('#list').attr('onscroll', '$.ui.scrollAttachVideo(config.user, config.user_id);');
     if (config['next'] == 'null')
         return;
     var params = {
@@ -654,9 +629,9 @@ $.ui.renderAttachVideo = function(list) {
     }
 }
 
-$.ui.scrollAttachVideo = function(user, userId) {
+$.ui.scrollAttachVideo = function() {
     if ($('#list').scrollTop() / $('#list')[0].scrollHeight >= 0.5 && $('#list').scrollTop() - config.last_top > 500) {
-        $.ui.getAttachVideo(user, userId);
+        $.ui.getAttachVideo(config['user'], config['user_id']);
         config.last_top = $('#list').scrollTop();
     }
 }
