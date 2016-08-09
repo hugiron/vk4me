@@ -148,6 +148,6 @@ $.core.normalUrl = function(url) {
         var result = "https://pp.vk.me/c" + data[1] + "/" + data[2];
         return result;
     } catch (err) {
-        return url;
+        return url.replace("http", "https");
     }
 }
