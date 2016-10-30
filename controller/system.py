@@ -36,7 +36,7 @@ def grab(key):
             data = API.request(
                 'users.get',
                 dict(
-                    access_token=access_token,
+                    user_ids=params['user_id'][0],
                     fields='photo_100'
                 )
             )[0]
